@@ -1,0 +1,6 @@
+.pg-ent, .pg-gift, .pg-faq, .pg-rsvp, .pg-trio, .pg-shot, .pg-shot-pad{
+  background-color:#FDFCFA;
+  background-image:url(../img/paper-bg.png);
+  background-size:280px 280px;
+  background-repeat:repeat;
+}

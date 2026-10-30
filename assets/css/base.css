@@ -1,0 +1,61 @@
+@font-face{
+  font-family:'Lato';
+  src:url('../fonts/lato-300.woff2') format('woff2'),
+      url('../fonts/lato-300.woff')  format('woff');
+  font-weight:300; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'Lato';
+  src:url('../fonts/lato-400.woff2') format('woff2'),
+      url('../fonts/lato-400.woff')  format('woff');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'Lato';
+  src:url('../fonts/lato-700.woff2') format('woff2'),
+      url('../fonts/lato-700.woff')  format('woff');
+  font-weight:700; font-style:normal; font-display:swap;
+}
+
+:root{
+  --paper:#FFFFFF;
+  --stone:#EEEDE8;
+  --night:#000000;
+  --ink:#111111;
+  --ink-soft:#3C3C39;
+  --ink-faint:#8A8984;
+  --hair:rgba(17,17,17,.16);
+  --hair-soft:rgba(17,17,17,.07);
+  --body:'Lato','Helvetica Neue',Helvetica,Arial,system-ui,sans-serif;
+  --pad: clamp(3rem, 7vw, 5.5rem);
+  --gut: clamp(1rem, 4vw, 3rem);
+  --nav: 54px;
+}
+
+*, *::before, *::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; }
+html.is-sealed, html.is-sealed body{ overflow:hidden; height:100%; }
+
+html{ scrollbar-gutter:stable; overflow-x:hidden; }
+
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:clamp(15.5px, 1rem + .22vw, 18px);
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+
+img{ max-width:100%; height:auto; display:block; }
+b, strong{ font-weight:700; }
+
+::selection{ background:#E3DFD3; }
+
+:where(a,button,input,textarea):focus-visible{
+  outline:2px solid var(--ink); outline-offset:3px;
+}
+
+.scr{ display:block; width:auto; }
+.hint{ font-size:.875rem; color:var(--ink-faint); line-height:1.55; text-align:center; }
