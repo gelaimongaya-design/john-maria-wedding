@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-sealed">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <title>John + Maria</title>
 <meta name="description" content="John Rolly Gumbi and Ma. Rhea Gabas invite you to an intimate wedding in the forest. 2 February 2027, Timmy in the Woods, Antipolo, Rizal.">
-<meta name="theme-color" content="#FAFAF8">
+<meta name="theme-color" content="#EEEDE8">
 
 <meta name="robots" content="noindex, nofollow">
 <meta name="googlebot" content="noindex, nofollow">
@@ -14,517 +14,547 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="John + Maria &middot; 02.02.2027">
 <meta property="og:description" content="An intimate wedding in the middle of the forest. Timmy in the Woods, Antipolo.">
-<meta property="og:image" content="assets/img/monogram.png">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="assets/img/land-photo.jpg">
+<meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="assets/img/monogram.png" type="image/png">
+<link rel="icon" href="assets/img/monogram-jm.png" type="image/png">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400&display=swap">
-
-<link rel="stylesheet" href="assets/css/reset.css?v=f89a6ac6">
-<link rel="stylesheet" href="assets/css/style.css?v=fc54f356">
+<link rel="preload" href="assets/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/reset.css?v=25">
+<link rel="stylesheet" href="assets/css/base.css?v=25">
+<link rel="stylesheet" href="assets/css/envelope.css?v=25">
+<link rel="stylesheet" href="assets/css/layout.css?v=25">
+<link rel="stylesheet" href="assets/css/rsvp.css?v=25">
+<link rel="stylesheet" href="assets/css/footer.css?v=25">
+<link rel="stylesheet" href="assets/css/paper.css?v=25">
 </head>
 <body>
-
-<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
-  <defs>
-
-    <pattern id="lace" x="0" y="0" width="22" height="20" patternUnits="userSpaceOnUse">
-      <path d="M0 1 H22" fill="none" stroke="#DEDCD6" stroke-width="1"/>
-      <path d="M0 1 A11 11 0 0 0 22 1" fill="none" stroke="#DEDCD6" stroke-width="1"/>
-      <ellipse cx="11" cy="8.5" rx="2.6" ry="3.4" fill="none" stroke="#DEDCD6" stroke-width="1"/>
-      <circle cx="3" cy="4" r="1" fill="#DEDCD6"/>
-      <circle cx="19" cy="4" r="1" fill="#DEDCD6"/>
-    </pattern>
-
-    <radialGradient id="pearl" cx="34%" cy="30%" r="72%">
-      <stop offset="0%"  stop-color="#FFFFFF"/>
-      <stop offset="52%" stop-color="#F4F2ED"/>
-      <stop offset="100%" stop-color="#DFDDD6"/>
-    </radialGradient>
-  </defs>
-</svg>
 
 <div id="overture">
   <div class="motes" id="motes" aria-hidden="true"></div>
   <div class="drift drift-over" id="drift-over" aria-hidden="true"></div>
 
-  <div class="overture-inner">
-    <div class="overture-eyebrow">
-      <p class="label">An invitation from</p>
-      <p class="display" style="font-size:clamp(1.9rem,6vw,2.6rem);letter-spacing:.04em">
-        John <span style="font-style:italic;color:var(--ink-soft)">&amp;</span> Maria
-      </p>
-    </div>
+  <div class="env-stage">
 
     <div class="envelope">
-      <div class="env-body"></div>
+      <img class="env-body" src="assets/img/env-closed.png" alt="" width="952" height="636">
 
-      <div class="env-card">
-        <p class="label">Together with our families</p>
-        <p class="display">You are invited</p>
-        <p class="label">02 · 02 · 2027</p>
+      <div class="card-slot" aria-hidden="true">
+        <span class="env-shade"></span>
+        <div class="env-card">
+          <img class="card-paper" src="assets/img/card-paper.png" alt="" width="920" height="873">
+          <span class="card-tail"></span>
+          <img class="card-mark" src="assets/img/monogram-mark.svg" alt="John + Maria" width="141" height="178">
+          <img class="card-msg" src="assets/img/card-text.png"
+               alt="Together with our families, we invite you to join us for an intimate wedding in the middle of the forest. Tuesday, 2nd February, Timmy in the Woods."
+               width="780" height="353">
+        </div>
       </div>
 
-      <div class="env-front"></div>
-      <div class="env-flap"></div>
+      <img class="env-front" src="assets/img/env-open.png" alt="" width="700" height="493">
 
-      <svg class="env-fold" viewBox="0 0 142 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0 0 L71 66 L142 0" fill="none" stroke="#D8D6CF" stroke-width="1"
-              vector-effect="non-scaling-stroke"/>
-      </svg>
+      <span class="env-text" aria-label="A love letter from John and Maria">
+        <img class="env-caps" src="assets/img/env-caps.png" alt="" width="483" height="26">
+        <img class="env-script" src="assets/img/env-script.png" alt="" width="570" height="157">
+      </span>
 
-      <svg class="env-lace" viewBox="0 0 330 18" preserveAspectRatio="none" aria-hidden="true">
-        <rect width="330" height="18" fill="url(#lace)"/>
-      </svg>
+      <img class="env-bow" src="assets/img/env-ribbon.png" alt="" width="486" height="616">
 
-      <button class="seal" id="unseal" type="button" aria-label="Open the invitation">J·M</button>
+      <button class="seal-btn" id="unseal" type="button" aria-label="Open the invitation">
+        <span class="seal-ring" aria-hidden="true"></span>
+        <img class="env-seal" src="assets/img/env-seal.png" alt="" width="420" height="423">
+      </button>
+
+      <img class="env-rose" src="assets/img/env-rose.png" alt="" width="480" height="588">
+
+      <img class="bloom bloom-b" src="assets/img/open-fl-b.png" alt="" width="620" height="707">
+      <img class="bloom bloom-a" src="assets/img/open-fl-a.png" alt="" width="620" height="540">
     </div>
 
-    <button class="open-cue" id="unseal-cue" type="button">Open the invitation</button>
   </div>
 </div>
 
 <main id="suite" aria-hidden="true">
+
+<nav class="nav" id="nav" aria-label="Sections">
+  <div class="nav-in">
+    <ul class="nav-side nav-l">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#details">Details</a></li>
+      <li><a href="#timeline">Timeline</a></li>
+    </ul>
+
+    <a class="nav-mark" href="#home" aria-label="Top">
+      <img src="assets/img/monogram-jm.svg" alt="John + Maria" width="141" height="203">
+    </a>
+
+    <ul class="nav-side nav-r">
+      <li><a href="#entourage">Entourage</a></li>
+      <li><a href="#rsvp">RSVP</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <button class="nav-burger" id="nav-burger" type="button"
+            aria-expanded="false" aria-controls="nav-menu" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <ul class="nav-menu" id="nav-menu" hidden>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#letter">Our letter</a></li>
+    <li><a href="#details">Details</a></li>
+    <li><a href="#story">Our love story</a></li>
+    <li><a href="#notes">What to know</a></li>
+    <li><a href="#timeline">Our timeline</a></li>
+    <li><a href="#entourage">Our entourage</a></li>
+    <li><a href="#photos">Your photos</a></li>
+    <li><a href="#gift">Gift</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#rsvp">RSVP</a></li>
+    <li><a href="#contact">Get in touch</a></li>
+  </ul>
+</nav>
+
 <div class="leaf">
 
   <div class="drift" id="drift" aria-hidden="true"></div>
 
-  <section class="hero tight">
-    <img class="hero-mark" src="assets/img/monogram.png" alt="The J and M monogram in a lace-edged oval">
-    <h1 class="display hero-names">
-      John<span class="hero-amp">and</span>Maria
-    </h1>
-    <p class="label">Are tying the knot</p>
+  <section class="pg pg-land" id="home">
+    <img class="land-shot" src="assets/img/land-photo.jpg"
+         alt="John Rolly and Ma. Rhea in the hills of Antipolo" width="2000" height="1333">
+    <img class="land-scr" src="assets/img/scr-knot.png"
+         alt="John Rolly and Ma. Rhea are tying the knot!" width="1135" height="315">
+    <p class="land-when">February 2, 2027</p>
+    <p class="land-where">Antipolo City, Rizal</p>
+  </section>
 
-    <div class="cal" role="img" aria-label="February 2027. The wedding is on Tuesday the second.">
-      <p class="cal-month">February 2027</p>
-      <div class="cal-grid" aria-hidden="true">
-        <span class="cal-h">Su</span><span class="cal-h">Mo</span><span class="cal-h">Tu</span><span class="cal-h">We</span><span class="cal-h">Th</span><span class="cal-h">Fr</span><span class="cal-h">Sa</span>
-        <span></span><span>1</span><span class="cal-day"><svg class="cal-heart" viewBox="0 0 24 22" fill="none" aria-hidden="true"><path d="M12 20.4C6.4 16.4 2 12.9 2 8.2 2 5 4.4 2.8 7.3 2.8c1.8 0 3.6.9 4.7 2.4 1.1-1.5 2.9-2.4 4.7-2.4C19.6 2.8 22 5 22 8.2c0 4.7-4.4 8.2-10 12.2Z" stroke="#C6C4BD" stroke-width="1.1" stroke-linejoin="round"/></svg><b>2</b></span><span>3</span><span>4</span><span>5</span><span>6</span>
-        <span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span>
-        <span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span><span>20</span>
-        <span>21</span><span>22</span><span>23</span><span>24</span><span>25</span><span>26</span><span>27</span>
-        <span>28</span>
+  <section class="pg pg-letter" id="letter">
+    <div class="letter-in">
+      <div class="letter-note js-reveal">
+        <img class="scr scr-dear" src="assets/img/scr-dear.png" alt="Dear Family and Friends," width="962" height="156">
+
+        <p>With grateful hearts, we invite you to be part of our private and intimate
+           celebration as we begin this new chapter together.</p>
+        <p>We thank God for bringing our paths together and for blessing us with the
+           love and support of the people who matter most.</p>
+        <p>Thank you for being part of our story and for celebrating this beautiful
+           moment with us.</p>
+
+        <p class="letter-sign">With Love,</p>
+        <img class="scr scr-sign" src="assets/img/scr-withlove.png" alt="John and Maria" width="899" height="210">
+      </div>
+
+      <div class="letter-art js-reveal" aria-hidden="true">
+        <img class="art-anemone" src="assets/img/fl-anemone.png" alt="" width="487" height="822">
+        <img class="art-note" src="assets/img/scr-note.png" alt="" width="926" height="886">
+        <img class="art-oyster" src="assets/img/oyster.png" alt="" width="835" height="847">
       </div>
     </div>
   </section>
 
-  <svg class="rule-pearl" viewBox="0 0 240 14" aria-hidden="true">
-    <line x1="0" y1="7" x2="88" y2="7" stroke="#E6E4DE" stroke-width="1"/>
-    <line x1="152" y1="7" x2="240" y2="7" stroke="#E6E4DE" stroke-width="1"/>
-    <circle cx="96"  cy="7" r="3.4" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-    <circle cx="108" cy="7" r="5"   fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-    <circle cx="120" cy="7" r="6"   fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-    <circle cx="132" cy="7" r="5"   fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-    <circle cx="144" cy="7" r="3.4" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-  </svg>
-
-  <section class="js-reveal">
-    <p class="ask"><em>John asked and Maria said yes!</em></p>
-    <p class="lede">
-      Together with our families, we invite you to join us for an
-      intimate wedding in the middle of the forest.
-    </p>
-
-    <svg class="botanical" width="56" height="92" viewBox="0 0 56 92" fill="none" aria-hidden="true">
-      <g stroke="#C6C4BD" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M31 5C43 13 47 31 38 42c-6 7-16 6-19-1C15 32 20 12 31 5Z"/>
-        <path d="M31 5c-5 11-7 25-3 37"/>
-        <path d="M29.5 19v16"/>
-        <path d="M27.5 42C30 58 30 74 28.5 89"/>
-        <path d="M28.5 60C20 55 11 61 9 71c9 3 17-2 19.5-11Z"/>
-        <path d="M28 73c6-4 13-1 15 6-8 2-13-.5-15-6Z"/>
-      </g>
-    </svg>
+  <section class="pg pg-shot">
+    <img src="assets/img/pic-trio.jpg" alt="John and Maria on the mountain road" width="2000" height="1116">
   </section>
 
-  <section class="tight js-reveal">
-    <p class="label">Until we say I do</p>
-    <div class="count" id="count" role="timer" aria-live="off">
-      <div class="count-unit"><span class="count-n" id="c-d">00</span><span class="count-l">Days</span></div>
-      <div class="count-unit"><span class="count-n" id="c-h">00</span><span class="count-l">Hours</span></div>
-      <div class="count-unit"><span class="count-n" id="c-m">00</span><span class="count-l">Minutes</span></div>
-      <div class="count-unit"><span class="count-n" id="c-s">00</span><span class="count-l">Seconds</span></div>
+  <section class="pg pg-details" id="details">
+    <div class="det-in">
+      <div class="det-text js-reveal">
+        <img class="scr scr-wed" src="assets/img/scr-our-wedding.png" alt="Our Wedding" width="894" height="261">
+
+        <img class="txt det-when" src="assets/img/txt-date.png" alt="February 2, 2027. Tuesday, 3:00 PM" width="663" height="215">
+
+        <img class="scr scr-venue" src="assets/img/scr-timmy.png" alt="Timmy in the Woods" width="907" height="180">
+
+        <img class="txt det-where" src="assets/img/txt-address.png" alt="#3 Mount Everest Avenue, Goldenhills Subdivision, Antipolo, 1870 Rizal" width="1016" height="157">
+
+        <p class="det-links">
+          <a class="pill" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&amp;query=Timmy%20in%20the%20Woods%2C%20%233%20Mount%20Everest%20Avenue%2C%20Goldenhills%20Subdivision%2C%20Antipolo%2C%201870%20Rizal">Google Map</a>
+          <a class="pill" target="_blank" rel="noopener"
+             href="https://waze.com/ul?q=Timmy%20in%20the%20Woods%20Antipolo&amp;navigate=yes">Waze</a>
+        </p>
+      </div>
+
+      <div class="det-shots js-reveal" aria-hidden="true">
+        <figure class="taped taped-a">
+          <img class="tape" src="assets/img/tape-l.png" alt="" width="924" height="406">
+          <img src="assets/img/det-photo-a.jpg" alt="" width="206" height="216">
+        </figure>
+        <figure class="taped taped-b">
+          <img class="tape tape-flip" src="assets/img/tape-r.png" alt="" width="850" height="585">
+          <img src="assets/img/det-photo-b.jpg" alt="" width="620" height="810">
+        </figure>
+      </div>
+    </div>
+
+    <div class="count" aria-label="Countdown to the wedding">
+      <div class="count-row">
+        <div class="count-unit"><span class="flip" id="c-d" data-pad="3"></span><span class="count-l">Days</span></div>
+        <span class="count-sep">:</span>
+        <div class="count-unit"><span class="flip" id="c-h" data-pad="2"></span><span class="count-l">Hrs</span></div>
+        <span class="count-sep">:</span>
+        <div class="count-unit"><span class="flip" id="c-m" data-pad="2"></span><span class="count-l">Mins</span></div>
+        <span class="count-sep">:</span>
+        <div class="count-unit"><span class="flip" id="c-s" data-pad="2"></span><span class="count-l">Secs</span></div>
+      </div>
     </div>
   </section>
 
-  <section class="cover has-photo cover-right js-reveal">
-    <figure class="cover-photo">
-      <img src="assets/img/cover-day.jpg" alt="">
+  <section class="pg pg-story" id="story">
+    <div class="sto-in">
+      <div class="sto-left js-reveal">
+        <img class="scr scr-story" src="assets/img/scr-love-story.png" alt="Our Love Story" width="969" height="304">
+        <figure class="taped taped-c">
+          <img class="tape" src="assets/img/tape-l.png" alt="" width="924" height="406">
+          <img src="assets/img/sto-photo.jpg" alt="Maria under her veil" width="900" height="1129">
+        </figure>
+      </div>
+
+      <div class="sto-right js-reveal">
+        <article>
+          <h3>12.01.20 - The First Meet</h3>
+          <p>Maria was a new hire, welcomed by the team over dinner in Makati. Somehow, she
+             and John ended at the same table. Just the usual office chaos, everyone teasing them.</p>
+          <p>Neither was looking for love. They were simply two people sharing a table,
+             completely unaware they&rsquo;d someday become each other&rsquo;s favorite person.</p>
+        </article>
+        <article>
+          <h3>08.01.22 - The Love Begins</h3>
+          <p>Between busy seasons and fieldwork, something quietly grew between them.
+             In front of Mt. Mayon, they finally said what they&rsquo;d been feeling.</p>
+          <p>From there, love found its rhythm in Metro, through late-night ramen dates
+             and the comfort of simply being together during overtime.</p>
+        </article>
+        <article>
+          <h3>08.01.26 - The &ldquo;Yes&rdquo; Day</h3>
+          <p>Four years later, on the same date their love began, they decided to choose each
+             other for a lifetime, this time under the stars while camping in Laguna.</p>
+        </article>
+        <article>
+          <h3>02.02.27 - The Best Day</h3>
+          <p>What began in Bicol, grew through their days in Metro, and became forever in
+             Laguna. Now, with God at the center and the people they love beside them,
+             they&rsquo;re ready for the next chapter.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg pg-shot">
+    <img src="assets/img/pic-hill.jpg" alt="John and Maria on the hillside" width="1366" height="768">
+  </section>
+
+  <section class="pg pg-note" id="notes">
+    <div class="note-three">
+      <div class="note-col js-reveal">
+        <img class="note-fl" src="assets/img/fl-rose.png" alt="" width="900" height="906">
+        <h3>Ceremony &amp; Reception</h3>
+        <p>We&rsquo;ve chosen to have a simple intimate wedding and dinner with our closest
+           family and friends at <b>Timmy in the Woods.</b></p>
+      </div>
+      <div class="note-col js-reveal">
+        <img class="note-fl" src="assets/img/fl-daisy.png" alt="" width="852" height="849">
+        <h3>Dress Code</h3>
+        <p>A forest affair calls for formal elegance. Please wear long dresses and suits
+           with ties in <b>black and/or white.</b></p>
+      </div>
+      <div class="note-col js-reveal">
+        <img class="note-fl" src="assets/img/fl-lily.png" alt="" width="940" height="988">
+        <h3>Transportation</h3>
+        <p>The venue is accessible via Grab or private car. The designated parking area is
+           located outside the venue. Please allow at least <b>2 hours of travel time</b>
+           and plan accordingly, as traffic conditions may cause delays.</p>
+      </div>
+    </div>
+
+    <div class="note-woods js-reveal">
+      <img class="note-euca" src="assets/img/fl-euca.png" alt="" width="526" height="786">
+      <h3>Notes from the Woods</h3>
+      <p class="wide">*Squirels, peacocks, birds, and other woodland friends may join us.<br>
+         Please enjoy them from a distance and avoid touching or feeding them.</p>
+      <p class="wide">*Mosquitos may be present, so please come prepared.</p>
+    </div>
+  </section>
+
+  <section class="pg pg-trio">
+    <figure class="trio-a"><img src="assets/img/trio-a.jpg" alt="John holding Maria in the long grass" width="900" height="1350"></figure>
+    <figure class="trio-b"><img src="assets/img/trio-b.jpg" alt="Their hands, hers over his" width="1000" height="1455"></figure>
+    <figure class="trio-c"><img src="assets/img/trio-c.jpg" alt="John and Maria in the long grass" width="900" height="1350"></figure>
+  </section>
+
+  <section class="pg pg-time" id="timeline">
+    <div class="time-in">
+      <div class="time-left js-reveal">
+        <img class="time-bg" src="assets/img/tl-photo.jpg" alt="" width="1000" height="1500" aria-hidden="true">
+        <div class="time-inner">
+        <img class="scr scr-time" src="assets/img/scr-timeline.png" alt="Our Timeline" width="933" height="299">
+        <div class="time-list">
+          <div class="time-row"><span>2:30 PM</span><span>Arrival &amp; Welcome</span></div>
+          <div class="time-row"><span>3:00 PM</span><span>Ceremony</span></div>
+          <div class="time-row"><span>4:00 PM</span><span>Sips &amp; Bites</span></div>
+          <div class="time-row"><span>5:00 PM</span><span>Reception</span></div>
+          <div class="time-row"><span>8:00 PM</span><span>End of Event</span></div>
+        </div>
+        </div>
+      </div>
+
+      <figure class="taped-d js-reveal">
+        <img src="assets/img/tl-venue.jpg" alt="The reception tables set under the trees at Timmy in the Woods" width="760" height="985">
+      </figure>
+    </div>
+  </section>
+
+  <section class="pg pg-ent" id="entourage">
+    <img class="ent-lily ent-lily-l" src="assets/img/ent-lily-l.png" alt="" width="202" height="811" aria-hidden="true">
+    <img class="ent-lily ent-lily-r" src="assets/img/ent-lily-r.png" alt="" width="483" height="683" aria-hidden="true">
+
+    <img class="scr scr-ent js-reveal" src="assets/img/scr-entourage.png" alt="Our Entourage" width="904" height="251">
+
+    <div class="roll js-reveal">
+      <div class="role role-one">
+        <img class="r" src="assets/img/r-officiant.png" alt="Officiant" width="242" height="111">
+        <p>Ptr. Ronimel Luna</p>
+      </div>
+
+      <div class="role-two">
+        <div class="role">
+          <img class="r" src="assets/img/r-parents-bride.png" alt="Parents of the Bride" width="354" height="111">
+          <p>Mr. Francisco Gabas Jr.<br>Mrs. Leonisa Gabas</p>
+        </div>
+        <div class="role">
+          <img class="r" src="assets/img/r-parents-groom.png" alt="Parents of the Groom" width="347" height="111">
+          <p>Mr. Rolly Gumbi<br>Mrs. Levie Gumbi</p>
+        </div>
+      </div>
+
+      <div class="role role-one">
+        <img class="r" src="assets/img/r-principal.png" alt="Principal Sponsors" width="346" height="111">
+        <div class="role-pair"><p>Mrs. Josephine Luna</p><p>Mr. Ronnel Luna</p></div>
+      </div>
+
+      <div class="role-two">
+        <div class="role">
+          <img class="r" src="assets/img/r-man-of-honor.png" alt="Man of Honor" width="289" height="111">
+          <p>Mr. Jose Rhyan Gabas</p>
+        </div>
+        <div class="role">
+          <img class="r" src="assets/img/r-best-woman.png" alt="Best Woman" width="266" height="111">
+          <p>Ms. Kimverly Gumbi</p>
+        </div>
+      </div>
+
+      <div class="role role-one">
+        <img class="r" src="assets/img/r-bridesmaids.png" alt="Bridesmaids" width="286" height="111">
+        <p>Ms. Marianne Castillo<br>Ms. Desie Jay Bacbac</p>
+      </div>
+    </div>
+
+    <img class="scr scr-sec js-reveal" src="assets/img/scr-secondary.png" alt="Secondary Sponsors" width="599" height="129">
+
+    <div class="roll js-reveal">
+      <div class="role-two">
+        <div class="role">
+          <img class="r" src="assets/img/r-candle.png" alt="Candle" width="166" height="111">
+          <p>Mr. Geo Mongaya<br>Ms. Angelica Rollie Mongaya</p>
+        </div>
+        <div class="role">
+          <img class="r" src="assets/img/r-veil.png" alt="Veil" width="126" height="111">
+          <p>Mr. Rhenz Llovel Domingo<br>Ms. Lovelyn Atuel</p>
+        </div>
+      </div>
+
+      <div class="role role-one">
+        <img class="r" src="assets/img/r-cord.png" alt="Cord" width="133" height="111">
+        <p>Mr. Marcelino Argonza<br>Ms. Rovie Angely Gumbi -Argonza</p>
+      </div>
+
+      <div class="role-two">
+        <div class="role">
+          <img class="r" src="assets/img/r-ring-bearer.png" alt="Ring Bearer" width="294" height="111">
+          <p>Ms. Rhianna Yvonne Gabas</p>
+        </div>
+        <div class="role">
+          <img class="r" src="assets/img/r-bible-bearer.png" alt="Bible Bearer" width="296" height="111">
+          <p>Ms. Rhee Anne Gabas</p>
+        </div>
+      </div>
+
+      <div class="role role-one">
+        <img class="r" src="assets/img/r-flower-girls.png" alt="Flower Girls" width="317" height="111">
+        <p>Ms. Louise Mirielle Argonza<br>Ms. Laurice Mayelle Argonza</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg pg-pv" id="photos">
+    <div class="pv-in">
+      <figure class="pv-shot js-reveal">
+        <img src="assets/img/pv-photo.jpg" alt="" width="760" height="1099">
+        <img class="pv-scr" src="assets/img/scr-pv.png"
+             alt="Our story, your version" width="913" height="670">
+      </figure>
+
+      <div class="pv-text js-reveal">
+        <p class="pv-lede">While our photographers and videographers capture the day,
+           we would love to see your moments too.</p>
+        <p class="pv-lede">Please upload your versions in the qr or link below:</p>
+
+        <div class="pv-qr">
+          <canvas id="qr-photos" width="150" height="150" aria-label="QR code for this page"></canvas>
+        </div>
+
+        <div class="share" id="share" hidden>
+          <label class="field-label" for="share-name">Your name</label>
+          <input class="field" id="share-name" type="text" autocomplete="name"
+                 placeholder="So we know whose photos these are">
+
+          <input id="share-pick" type="file" accept="image/*,video/*" multiple hidden>
+          <button class="cta" type="button" id="share-choose">Upload your photos and videos</button>
+          <p class="hint">Photos and short clips work best. A long video may take a while,
+             or be too big to send here.</p>
+
+          <ul class="share-list" id="share-list"></ul>
+          <p class="hint" id="share-msg" role="status" aria-live="polite" hidden></p>
+          <button class="cta" type="button" id="share-send" hidden>Send them</button>
+          <button class="text-cta" type="button" id="share-again" hidden>Choose other photos</button>
+        </div>
+
+        <p class="pv-ask">Kindly let the couple post first on social media.</p>
+        <p class="pv-lede">You are welcome to share yours once we do. Thank you!</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="pg pg-gift" id="gift">
+    <img class="scr scr-gift js-reveal" src="assets/img/scr-presence.png"
+         alt="Your presence and prayer are that we request." width="978" height="307">
+
+    <figure class="taped taped-g1 js-reveal">
+      <img class="tape" src="assets/img/tape-l.png" alt="" width="924" height="406">
+      <img src="assets/img/gift-photo-a.jpg" alt="" width="720" height="921">
+    </figure>
+    <figure class="taped taped-g2 js-reveal">
+      <img class="tape tape-flip" src="assets/img/tape-r.png" alt="" width="850" height="585">
+      <img src="assets/img/gift-photo-b.jpg" alt="" width="720" height="903">
     </figure>
 
-    <svg class="cover-art" viewBox="0 0 72 120" fill="none" aria-hidden="true">
-      <g stroke="#C6C4BD" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M36 116C35 92 34 60 36 22"/>
-        <path d="M36 22C35 18 36 14 37 11"/>
-        <path d="M36 90C27 88 21 85 16 87"/>
-        <path d="M36 90C45 88 51 85 56 87"/>
-        <path d="M36 78C28 76 23 73 18 75"/>
-        <path d="M36 78C44 76 49 73 54 75"/>
-        <path d="M36 66C29 64 24 61 20 63"/>
-        <path d="M36 66C43 64 48 61 52 63"/>
-        <path d="M36 54C30 52 26 49 23 51"/>
-        <path d="M36 54C42 52 46 49 49 51"/>
-        <path d="M36 42C31 40 28 37 26 39"/>
-        <path d="M36 42C41 40 44 37 46 39"/>
-        <path d="M36 32C32 30 30 28 29 30"/>
-        <path d="M36 32C40 30 42 28 43 30"/>
-      </g>
-    </svg>
-    <p class="display cover-t">The Day</p>
-    <a class="cover-cue" href="#day">Continue</a>
+    <div class="gift-text js-reveal">
+      <p>With all that we have, we are truly blessed.<br>
+         But if you desire to give nonetheless,<br>
+         monetary gift is the one we suggest.</p>
+      <p>Thank you for being part of this milestone with us.</p>
+      <img class="gift-qr" src="assets/img/instapay.png"
+           alt="InstaPay QR code for John and Maria" width="914" height="915">
+    </div>
   </section>
 
-  <section class="js-reveal" id="day">
-    <p class="label">Ceremony and Reception</p>
-    <div class="stack">
-      <p class="venue">Timmy in the Woods</p>
-      <p class="addr">#3 Mount Everest Avenue, Goldenhills Subdivision, Antipolo, 1870 Rizal</p>
-    </div>
-    <p class="time-mark">Tuesday · 3:00 in the afternoon</p>
-    <p class="map-line">
-      <a class="map-cta" href="https://www.google.com/maps/search/?api=1&amp;query=Timmy%20in%20the%20Woods%2C%20%233%20Mount%20Everest%20Avenue%2C%20Goldenhills%20Subdivision%2C%20Antipolo%2C%201870%20Rizal"
-         target="_blank" rel="noopener noreferrer">View the location</a>
-    </p>
-  </section>
+  <section class="pg pg-faq" id="faq">
+    <img class="faq-art" src="assets/img/fl-gypso.png" alt="" width="484" height="780" aria-hidden="true">
 
-  <section class="js-reveal tight">
-    <p class="label">A note from the woods</p>
-    <ul class="notes">
-      <li>Squirrels, peacocks, birds and other woodland friends may join us. Please enjoy them from a distance, and avoid touching or feeding them.</li>
-      <li>Mosquitos may be present, so come prepared.</li>
-    </ul>
-  </section>
+    <img class="scr scr-faq js-reveal" src="assets/img/scr-faq.png" alt="Frequently Asked Qs" width="893" height="581">
 
-  <svg class="rule-pearl" viewBox="0 0 240 14" aria-hidden="true">
-    <line x1="0" y1="7" x2="96" y2="7" stroke="#E6E4DE" stroke-width="1"/>
-    <line x1="144" y1="7" x2="240" y2="7" stroke="#E6E4DE" stroke-width="1"/>
-    <circle cx="104" cy="7" r="3.4" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-    <circle cx="120" cy="7" r="5.6" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-    <circle cx="136" cy="7" r="3.4" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-  </svg>
-
-  <section class="js-reveal">
-    <p class="label">Dress code</p>
-    <p class="lede">
-      A forest affair calls for formal elegance. Long dresses, and suits with ties,
-      in black and&#8239;/&#8239;or white.
-    </p>
-    <div class="swatches" aria-hidden="true">
-      <span class="sw sw-w"></span>
-      <span class="sw sw-b"></span>
-    </div>
-    <p class="label" style="letter-spacing:.24em">White · Black</p>
-  </section>
-
-  <section class="cover has-photo cover-left js-reveal">
-    <figure class="cover-photo">
-      <img src="assets/img/cover-entourage.jpg" alt="">
-    </figure>
-
-    <svg class="cover-art wide" viewBox="0 0 160 60" fill="none" aria-hidden="true">
-      <g stroke="#C6C4BD" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 50C36 46 58 38 74 26"/>
-        <path d="M148 50C124 46 102 38 86 26"/>
-        <path d="M36 46C31 41 32 34 39 32C41 38 41 44 36 46Z"/>
-        <path d="M52 41C47 36 48 29 55 27C57 33 57 39 52 41Z"/>
-        <path d="M66 33C61 28 62 21 69 19C71 25 71 31 66 33Z"/>
-        <path d="M124 46C129 41 128 34 121 32C119 38 119 44 124 46Z"/>
-        <path d="M108 41C113 36 112 29 105 27C103 33 103 39 108 41Z"/>
-        <path d="M94 33C99 28 98 21 91 19C89 25 89 31 94 33Z"/>
-        <circle cx="80" cy="24" r="4.2" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".7"/>
-      </g>
-    </svg>
-    <p class="display cover-t">The Entourage</p>
-    <a class="cover-cue" href="#entourage">Explore here</a>
-  </section>
-
-  <section class="js-reveal" id="entourage">
-    <p class="label">The entourage</p>
-
-    <div class="roll" style="margin-top:.6rem">
-      <div class="role">
-        <p class="role-t">Officiant</p>
-        <div class="role-n"><span>Ptr. Ronimel Luna</span></div>
-      </div>
-    </div>
-
-    <div class="roll two">
-      <div class="role">
-        <p class="role-t">Parents of the Bride</p>
-        <div class="role-n">
-          <span>Mr. Francisco Gabas Jr.</span>
-          <span>Mrs. Leonisa Gabas</span>
+    <div class="faq-list js-reveal">
+      <div class="faq-q">
+        <span class="faq-n">01</span>
+        <div>
+          <h3>What time should I arrive?</h3>
+          <p>We recommend coming by 2:30 PM so you have time to settle in before the
+             ceremony starts.</p>
         </div>
       </div>
-      <div class="role">
-        <p class="role-t">Parents of the Groom</p>
-        <div class="role-n">
-          <span>Mr. Rolly Gumbi</span>
-          <span>Mrs. Levie Gumbi</span>
+      <div class="faq-q">
+        <span class="faq-n">02</span>
+        <div>
+          <h3>Can I bring my kids or a +1?</h3>
+          <p>This is a small and intimate wedding. We kindly ask that only those listed in
+             the invitation will be in attendance as we exchange our vows. Children are
+             welcome for immediate family only.</p>
+          <p>We appreciate your understanding.</p>
         </div>
       </div>
-    </div>
-
-    <div class="roll">
-      <div class="role">
-        <p class="role-t">Principal Sponsors</p>
-        <div class="role-n">
-          <span>Mr. Ronnel Luna</span>
-          <span>Mrs. Josephine Luna</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="roll two">
-      <div class="role">
-        <p class="role-t">Man of Honor</p>
-        <div class="role-n"><span>Mr. Jose Rhyan Gabas</span></div>
-      </div>
-      <div class="role">
-        <p class="role-t">Best Woman</p>
-        <div class="role-n"><span>Ms. Kimverly Gumbi</span></div>
-      </div>
-    </div>
-
-    <div class="roll">
-      <div class="role">
-        <p class="role-t">Bridesmaids</p>
-        <div class="role-n">
-          <span>Mrs. Marianne Castillo&#8209;Mamuric</span>
-          <span>Ms. Desie Jay Bacbac</span>
-        </div>
-      </div>
-    </div>
-
-    <p class="subhead">Secondary Sponsors</p>
-
-    <div class="roll two">
-      <div class="role">
-        <p class="role-t">Candle</p>
-        <div class="role-n">
-          <span>Mr. Geo Mongaya</span>
-          <span>Ms. Angelica Rollie Mongaya</span>
-        </div>
-      </div>
-      <div class="role">
-        <p class="role-t">Veil</p>
-        <div class="role-n">
-          <span>Mr. Rhenz Llovel Domingo</span>
-          <span>Mrs. Lovelyn Atuel&#8209;Domingo</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="roll">
-      <div class="role">
-        <p class="role-t">Cord</p>
-        <div class="role-n">
-          <span>Mr. Marcelino Argonza</span>
-          <span>Mrs. Rovie Angely Gumbi&#8209;Argonza</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="roll two">
-      <div class="role">
-        <p class="role-t">Ring Bearer</p>
-        <div class="role-n"><span>Ms. Rhianna Yvonne Gabas</span></div>
-      </div>
-      <div class="role">
-        <p class="role-t">Bible Bearer</p>
-        <div class="role-n"><span>Ms. Rhee Anne Gabas</span></div>
-      </div>
-    </div>
-
-    <div class="roll">
-      <div class="role">
-        <p class="role-t">Flower Girls</p>
-        <div class="role-n">
-          <span>Ms. Louise Mirielle Argonza</span>
-          <span>Ms. Laurice Mayelle Argonza</span>
+      <div class="faq-q">
+        <span class="faq-n">03</span>
+        <div>
+          <h3>Is the accommodation provided?</h3>
+          <p>While we won&rsquo;t have accommodations for everyone at the venue, there are
+             several nearby options for those coming out of town. We recommend booking your
+             stay ahead of time.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="cover has-photo cover-pair js-reveal">
-    <figure class="cover-photo">
-      <img src="assets/img/cover-story.jpg" alt="">
-    </figure>
-    <figure class="cover-photo cover-photo-b">
-      <img src="assets/img/cover-story-2.jpg" alt="">
-    </figure>
+  <section class="pg pg-rsvp" id="rsvp">
+    <img class="scr scr-rsvp js-reveal" src="assets/img/scr-rsvp.png" alt="RSVP" width="788" height="318">
 
-    <svg class="cover-art" viewBox="0 0 64 112" fill="none" aria-hidden="true">
-      <g stroke="#C6C4BD" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 33C18 21 25 14 32 14C39 14 46 21 46 33C46 41 40 47 32 47C24 47 18 41 18 33Z"/>
-        <path d="M22 32C22 23 26 18 32 19"/>
-        <path d="M42 32C42 23 38 18 32 19"/>
-        <path d="M26 37C26 30 29 26 32 27C35 26 38 30 38 37"/>
-        <path d="M24 42C28 45 36 45 40 42"/>
-        <path d="M27 47C25 50 21 52 18 51"/>
-        <path d="M37 47C39 50 43 52 46 51"/>
-        <path d="M32 47C31 63 31 84 32 106"/>
-        <path d="M31 66C24 60 15 64 13 73C21 77 29 74 31 66Z"/>
-        <path d="M32 82C39 76 48 80 50 89C42 93 34 90 32 82Z"/>
-      </g>
-    </svg>
-    <p class="display cover-t">Our story, <em>through your eyes</em></p>
-    <a class="cover-cue" href="#photos">Send yours</a>
-  </section>
-
-  <section class="js-reveal" id="photos">
-    <p class="label">Photos and videos</p>
-    <p class="lede">
-      While our photographers and videographers capture the day, we would love to see
-      your moments too. Send yours here.
-    </p>
-    <div class="mark-note">
-      <p class="time-mark" style="letter-spacing:.24em">Kindly let us post first on social media</p>
-      <p class="field-note">You are welcome to share yours once we have.</p>
-    </div>
-
-    <div class="share" id="share" hidden>
-      <label class="field-label" for="share-name">Your name</label>
-      <input class="field" id="share-name" type="text" autocomplete="name"
-             placeholder="So we know whose photos these are">
-
-      <input id="share-pick" type="file" accept="image/*,video/*" multiple hidden>
-      <button class="rsvp-cta" type="button" id="share-choose">Choose photos and videos</button>
-      <p class="field-note">
-        Photos and short clips work best. A long video may take a while,
-        or be too big to send here.
-      </p>
-
-      <div class="share-qr">
-        <img src="assets/img/qr-photos.svg" width="132" height="132"
-             alt="A QR code that opens this page on a phone">
-        <p class="field-note">Scan to open this page on your phone, where your photos are</p>
-      </div>
-
-      <ul class="share-list" id="share-list"></ul>
-      <p class="field-note" id="share-msg" role="status" aria-live="polite" hidden></p>
-      <button class="rsvp-cta" type="button" id="share-send" hidden>Send them</button>
-
-      <button class="text-cta" type="button" id="share-again" hidden>Choose other photos</button>
-    </div>
-  </section>
-
-  <section class="js-reveal">
-    <p class="label">Gift guide</p>
-    <p class="lede" style="font-style:italic">
-      With all that we have, we are truly blessed. Your presence and prayer are that
-      we request. But if you desire to give nonetheless, a monetary gift is the one
-      we suggest.
-    </p>
-
-    <svg class="botanical" width="56" height="92" viewBox="0 0 56 92" fill="none" aria-hidden="true">
-      <g stroke="#C6C4BD" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M28 9c-4 4-10 6-14 5 0 13 4 24 10 29 2.6 2 5.4 2 8 0 6-5 10-16 10-29-4 1-10-1-14-5Z"/>
-        <path d="M18 15c1 12 4 22 10 28"/>
-        <path d="M38 15c-1 12-4 22-10 28"/>
-        <path d="M28 43v46"/>
-        <path d="M27 58C19 53 10 59 8 69c9 3 17-2 19-11Z"/>
-        <path d="M29 71c6-4 13-1 15 6-8 2-13-.5-15-6Z"/>
-      </g>
-    </svg>
-  </section>
-
-  <section class="cover has-photo cover-low js-reveal">
-    <figure class="cover-photo">
-      <img src="assets/img/cover-rsvp.jpg" alt="">
-    </figure>
-
-    <svg class="cover-art" viewBox="0 0 64 112" fill="none" aria-hidden="true">
-      <g stroke="#C6C4BD" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M29 108C28 84 29 54 38 26"/>
-        <path d="M38 26C39 22 39 18 38 15"/>
-        <path d="M29 108C15 88 15 56 27 32"/>
-        <path d="M37 28L36 32"/>
-        <path d="M32 32C32 39 40 39 40 32C38 34 34 34 32 32Z"/>
-        <path d="M34 44L33 48"/>
-        <path d="M29 48C29 55 37 55 37 48C35 50 31 50 29 48Z"/>
-        <path d="M31 60L30 64"/>
-        <path d="M26 64C26 71 34 71 34 64C32 66 28 66 26 64Z"/>
-        <path d="M30 76L29 80"/>
-        <path d="M25 80C25 87 33 87 33 80C31 82 27 82 25 80Z"/>
-      </g>
-    </svg>
-    <p class="display cover-t">RSVP</p>
-    <a class="cover-cue" href="#rsvp">Your reply requested</a>
-  </section>
-
-  <section class="js-reveal" id="rsvp">
-    <p class="label">RSVP</p>
-    <p class="lede">
-      We have reserved seat/s for you. The favour of your reply is requested
-      on or before <span class="rsvp-by">the end of November</span>.
-    </p>
+    <p class="rsvp-lede js-reveal">We have reserved seat/s for you. The favour of your reply is
+       requested on or before <b>November 30, 2026</b>.</p>
 
     <form class="rsvp-find" id="rsvp-find" hidden>
-      <label class="field-label" for="rsvp-name">Guest name</label>
-      <input class="field" id="rsvp-name" name="name" type="text"
-             autocomplete="name" autocapitalize="words" spellcheck="false"
-             placeholder="Enter your name">
-      <button class="rsvp-cta" type="submit" id="rsvp-look">Find my invitation</button>
+      <div class="row">
+        <label class="field-label" for="rsvp-name">Your Name:</label>
+        <div class="search">
+          <svg class="search-i" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/>
+            <path d="M15.4 15.4 L21 21" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>
+          </svg>
+          <input class="field" id="rsvp-name" name="name" type="text"
+                 autocomplete="name" placeholder="Your full name or first name">
+          <button class="search-x" type="reset" aria-label="Clear">&times;</button>
+        </div>
+      </div>
+      <button class="cta" type="submit" id="rsvp-look">Find my invitation</button>
     </form>
 
-    <p class="field-note" id="rsvp-msg" role="status" aria-live="polite" hidden></p>
+    <p class="hint" id="rsvp-msg" role="status" aria-live="polite" hidden></p>
 
     <div class="rsvp-party" id="rsvp-party" hidden>
-      <div class="seats">
-        <p class="label">Reserved in your honour</p>
-        <p class="seats-n" id="rsvp-seats"></p>
-        <p class="field-note" id="rsvp-seats-l">seats</p>
-      </div>
+      <p class="seats">
+        <span class="seats-n" id="rsvp-seats"></span>
+        <span class="seats-l" id="rsvp-seats-l">seats</span>
+        reserved for you
+      </p>
 
-      <svg class="rule-pearl" viewBox="0 0 240 14" aria-hidden="true">
-        <line x1="0" y1="7" x2="96" y2="7" stroke="#E6E4DE" stroke-width="1"/>
-        <line x1="144" y1="7" x2="240" y2="7" stroke="#E6E4DE" stroke-width="1"/>
-        <circle cx="104" cy="7" r="3.4" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-        <circle cx="120" cy="7" r="5.6" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-        <circle cx="136" cy="7" r="3.4" fill="url(#pearl)" stroke="#D6D4CC" stroke-width=".6"/>
-      </svg>
-
-      <p class="label">Confirm attendance</p>
+      <p class="party-h">Confirm attendance</p>
       <ul class="guests" id="rsvp-guests"></ul>
 
-      <p class="field-note" id="rsvp-others">
-        Anyone left blank can reply later.
-      </p>
+      <p class="hint" id="rsvp-others">Reply for everyone you can. The rest can answer later.</p>
 
-      <button class="rsvp-cta" type="button" id="rsvp-send">Confirm response</button>
-      <p class="field-note">
-        Only confirmed guests can be accommodated, and we are unable to
-        receive plus&#8209;ones.
-      </p>
+      <div class="row row-food">
+        <label class="field-label" for="rsvp-food">Food Restrictions:</label>
+        <textarea class="pad" id="rsvp-food" rows="3"
+                  placeholder="Anything we should know? Allergies, or what you would rather not have."></textarea>
+      </div>
+
+      <button class="cta" type="button" id="rsvp-send">Confirm response</button>
     </div>
 
     <button class="text-cta" type="button" id="rsvp-again" hidden>Reply for someone else</button>
-
-    <p class="label" id="rsvp-alt" style="letter-spacing:.2em;max-width:22rem">
-      Let us know so we can add you
-    </p>
+    <p class="hint" id="rsvp-alt"></p>
   </section>
 
-  <section class="js-reveal tight">
-    <p class="label">A private celebration</p>
-    <p class="lede">
-      This is a small and intimate wedding. Only those closest to us will be in
-      attendance as we exchange our vows. Children are welcome for immediate
-      family only.
-    </p>
-  </section>
+  <section class="pg pg-end" id="contact">
+    <img class="end-shot" src="assets/img/end-photo.jpg" alt="" width="2000" height="784">
 
-  <footer class="colophon js-reveal">
-    <img class="colophon-mark" src="assets/img/monogram.png" alt="">
-    <p class="send-off">We look forward to<br>celebrating with you.</p>
-    <p class="label">See you there</p>
-  </footer>
+    <div class="end-bar">
+      <img class="end-t" src="assets/img/scr-getintouch.png" alt="Get in touch" width="880" height="461">
+
+      <div class="end-who">
+        <p class="end-n">John Rolly Gumbi</p>
+        <p class="end-c"><span class="ic">&#9742;</span> <a href="tel:+639163131012">0916-313-1012</a></p>
+        <p class="end-c"><span class="ic">&#9993;</span> <a href="mailto:johnandmaria@gmail.com">johnandmaria@gmail.com</a></p>
+      </div>
+
+      <div class="end-who">
+        <p class="end-n">Ma. Rhea Gabas</p>
+        <p class="end-c"><span class="ic">&#9742;</span> <a href="tel:+639167408346">0916-740-8346</a></p>
+        <p class="end-c"><span class="ic">&#9993;</span> <a href="mailto:johnandmaria@gmail.com">johnandmaria@gmail.com</a></p>
+      </div>
+
+      <img class="end-mark" src="assets/img/monogram-jm.svg" alt="John + Maria" width="141" height="203">
+    </div>
+  </section>
 
 </div>
 </main>
@@ -535,14 +565,13 @@
 
 <button class="music" id="music-toggle" type="button" aria-label="Play music" aria-pressed="false" hidden>
   <svg viewBox="0 0 24 24" aria-hidden="true">
-    <g fill="currentColor">
-      <rect class="bar" x="4"  y="7"  width="3" height="10" rx="1.5"/>
-      <rect class="bar" x="10.5" y="4"  width="3" height="16" rx="1.5"/>
-      <rect class="bar" x="17" y="9"  width="3" height="8"  rx="1.5"/>
-    </g>
+    <path class="m-on"  d="M4 9v6h4l5 4V5L8 9H4z M16.5 8.5a5 5 0 0 1 0 7 M19 6a8.5 8.5 0 0 1 0 12"
+          fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+    <path class="m-off" d="M4 9v6h4l5 4V5L8 9H4z M17 9.5l4 5 M21 9.5l-4 5"
+          fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
   </svg>
 </button>
 
-<script src="assets/js/main.js?v=89973bb9" defer></script>
+<script src="assets/js/main.js?v=25"></script>
 </body>
 </html>
