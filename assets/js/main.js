@@ -1489,8 +1489,17 @@
   var V_APEX = 0.4239;
   var V_SLOPE = 0.8778;
 
-  function local(y0, sill, open, scale, top){
-    return (((y0 + (sill - y0) * open) - top) / scale).toFixed(1);
+  /* How much of the letter is shown once it is out: down to the inside edge
+     of its lower border. The border itself is held back, because a finished
+     edge there would read as the end of the paper, and the paper is not
+     meant to end: the pages carry straight on from it. */
+  var FOOT = 0.9085;
+
+  /* The lower edge of what is shown travels from the mouth of the envelope,
+     which is a V in screen terms, to that line on the letter itself. */
+  function seam(y0, hold, open, scale, top){
+    var at = (y0 - top) / scale;
+    return (at + (hold - at) * open).toFixed(1);
   }
 
   function exitTogether(){
@@ -1554,15 +1563,13 @@
     var apex0 = fr.top + fr.height * V_APEX;
     var left0 = armY(r.left + lx);
     var right0 = armY(r.left + rx);
-    var floor = Math.max(apex0 + (vh + 60 - apex0) * 2,
-                         r.top - dy + r.height * k + 120);
-
-    /* Where the grown letter's lower edge comes to rest, and how far it has
-       to travel for that edge to reach the top of the screen. The pages are
+    /* Where the shown part of the letter ends once it is grown, and how far
+       that edge has to travel to reach the top of the screen. The pages are
        sent off from exactly that edge and given the same distance and the
        same easing, so the foot of the letter and the head of the first page
        stay touching the whole way up: one long sheet, not two. */
-    var foot = r.top - dy + r.height * k;
+    var hold = r.height * FOOT;
+    var foot = r.top - dy + hold * k;
     var lift = foot - sr.top;
     if (!(lift > vh)) lift = vh;
     var run = Math.round(SCROLL * Math.min(1.5, Math.max(1, lift / vh * 0.62)));
@@ -1587,7 +1594,6 @@
       }
 
       var cut = glide(Math.min(1, t / CLIP));
-      var sill = apex0 + (floor - apex0) * cut;
       var rise = r.top - dy * g;
       var move = 'translate(' + (dx * g).toFixed(2) + 'px, ' + (y - dy * g).toFixed(1) + 'px) scale(' + scale.toFixed(4) + ')';
       scene.push({ transform: move });
@@ -1595,9 +1601,9 @@
         transform: move,
         clipPath: 'polygon(' + lx.toFixed(0) + 'px -' + (r.height * 2).toFixed(0) + 'px, ' +
                   rx.toFixed(0) + 'px -' + (r.height * 2).toFixed(0) + 'px, ' +
-                  rx.toFixed(0) + 'px ' + local(right0, sill, cut, scale, rise) + 'px, ' +
-                  (r.width / 2).toFixed(1) + 'px ' + local(apex0, sill, cut, scale, rise) + 'px, ' +
-                  lx.toFixed(0) + 'px ' + local(left0, sill, cut, scale, rise) + 'px)'
+                  rx.toFixed(0) + 'px ' + seam(right0, hold, cut, scale, rise) + 'px, ' +
+                  (r.width / 2).toFixed(1) + 'px ' + seam(apex0, hold, cut, scale, rise) + 'px, ' +
+                  lx.toFixed(0) + 'px ' + seam(left0, hold, cut, scale, rise) + 'px)'
       });
     }
     fly.animate(frames, { duration: total, easing: 'linear', fill: 'forwards' });
