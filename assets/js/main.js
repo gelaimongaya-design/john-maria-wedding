@@ -1542,6 +1542,10 @@
      meant to end: the pages carry straight on from it. */
   var FOOT = 0.9085;
 
+  /* How much of the letter's width is the written part, the lace down each
+     side taken off. */
+  var BARE = 0.72408;
+
   /* The lower edge of what is shown travels from the mouth of the envelope,
      which is a V in screen terms, to that line on the letter itself. */
   function seam(y0, hold, open, scale, top){
@@ -1586,6 +1590,12 @@
        so the two are the same width when they meet. */
     var sr = suite.getBoundingClientRect();
     var k = sr.width / r.width;
+
+    /* Where the paper shows no lace down its sides, the letter is grown that
+       much further, until its own lace has passed beyond the edges of the
+       screen. What is left facing the reader is the written part of the
+       letter meeting the written part of the paper, edge for edge. */
+    if (document.documentElement.classList.contains('is-wide-phone')) k /= BARE;
     if (!(k > 1.02)) k = 1.02;
     var dx = (sr.left + sr.width / 2) - (r.left + r.width / 2);
 

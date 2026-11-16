@@ -2269,6 +2269,14 @@ body.is-held{ overflow:hidden; }
    small screen spent on nothing. */
 html.is-wide-phone #suite{ --sheet:100vw; }
 
+/* The lace down the sides is left off there too. Drawn at this width the two
+   bands take better than a quarter of a small screen, and what they take is
+   taken from the words. The paper keeps its grain; it simply runs to the
+   edge of the glass, as it does when the paper is held closer. */
+html.is-wide-phone #suite{ padding-inline:0; }
+html.is-wide-phone #suite::before,
+html.is-wide-phone #suite::after{ display:none; }
+
 /* The arch that cuts the paper away above a dark page is a strip laid over
    the seam. Where its top edge met the page above, a hair of the page could
    show through once the phone drew it at a part of a pixel, which read as a
@@ -2321,6 +2329,11 @@ html.is-wide-phone #suite{ padding-top:var(--nav-real, 154px); }
    when its toolbars slide away, that strip is the colour the page ends in
    rather than the surface the envelope was lying on. */
 html.is-wide-phone body{ background:var(--night); }
+
+/* While the letter is still growing it does not yet reach the top of the
+   screen, and the dark behind the paper showed above it as a black band.
+   For as long as the letter is on its way, what lies behind it is paper. */
+html.is-wide-phone.is-arriving body{ background:var(--paper); }
 
 /* On the photographs page the asking above the box is centred, so what is
    typed in the box is centred too, at every width. */
