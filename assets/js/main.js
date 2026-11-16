@@ -1372,13 +1372,32 @@
     var where = parseFloat(held);
     if (!(where > 0)) where = 0;
 
+    /* A telephone will not always take the spot on the first asking: the
+       sound file is still arriving, and the asking is quietly dropped, which
+       starts the song from its beginning. So it is started with no sound at
+       all, the spot is asked for again until it takes, and only then is the
+       sound brought up. Nothing of the beginning is ever heard. */
     function goOn(){
       try { score.currentTime = where; } catch (ignored) {}
-      play(false);
+      play(true);
+
+      var tries = 0;
+      var aim = window.setInterval(function(){
+        tries++;
+        var there = Math.abs((score.currentTime || 0) - where) <= 1.5;
+
+        if (!there && score.readyState >= 1){
+          try { score.currentTime = where; } catch (ignored) {}
+          there = Math.abs((score.currentTime || 0) - where) <= 1.5;
+        }
+
+        if (there || tries >= 14){
+          window.clearInterval(aim);
+          if (!score.paused) fadeUp();
+        }
+      }, 120);
     }
 
-    /* the spot is set first and the song started second, so it carries on
-       from where it was rather than beginning again and jumping */
     if (score.readyState >= 1) goOn();
     else score.addEventListener('loadedmetadata', goOn, { once: true });
 
@@ -2238,9 +2257,17 @@
         /* Not zoomed: the picture is carried along with the finger, so the
            next one is already on its way before the finger is lifted. */
         var dx = ev.clientX - pan.x, dy = ev.clientY - pan.y;
-        if (!pan.way && (Math.abs(dx) > 8 || Math.abs(dy) > 8)){
-          pan.way = Math.abs(dx) > Math.abs(dy) ? 'side' : 'down';
+        var side = Math.abs(dx), down = Math.abs(dy);
+
+        /* A swipe across is rarely level, so anything that is not plainly
+           downward is taken as across; and a gesture read as downward can
+           still turn into one across if the finger carries on sideways. */
+        if (!pan.way && (side > 6 || down > 6)){
+          pan.way = (side * 1.35 >= down) ? 'side' : 'down';
+        } else if (pan.way === 'down' && side > 26 && side > down * 1.5){
+          pan.way = 'side';
         }
+
         if (pan.way === 'side'){
           slide = dx;
           place();
@@ -2261,8 +2288,8 @@
           var dx = ev.clientX - pan.x, dy = ev.clientY - pan.y;
           var took = Date.now() - pan.at;
           var box = stage.getBoundingClientRect();
-          var enough = Math.max(38, box.width * 0.13);
-          var flick = took < 420 && Math.abs(dx) > 22;
+          var enough = Math.max(30, box.width * 0.10);
+          var flick = took < 520 && Math.abs(dx) > 18;
 
           if (pan.way === 'side' && (Math.abs(dx) > enough || flick)){
             pan = null;
@@ -2283,8 +2310,25 @@
       }
 
       stage.addEventListener('pointerup', lift);
+
+      /* If the telephone takes the gesture back halfway through, what was
+         already carried across still counts, so a swipe is not thrown away */
       stage.addEventListener('pointercancel', function(ev){
-        delete touches[ev.pointerId]; pan = null; mid0 = null; settle();
+        delete touches[ev.pointerId];
+        mid0 = null;
+
+        var box = stage.getBoundingClientRect();
+        if (pan && pan.way === 'side' && zoom <= 1.02 &&
+            Math.abs(slide) > Math.max(26, box.width * 0.08)){
+          var way = slide < 0 ? 1 : -1;
+          pan = null;
+          shot.classList.remove('is-dragging');
+          slide = 0;
+          step(way);
+          return;
+        }
+        pan = null;
+        settle();
       });
 
       stage.addEventListener('wheel', function(ev){

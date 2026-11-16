@@ -2205,6 +2205,13 @@ body.is-held{ overflow:hidden; }
   display:grid; place-items:center;
   padding:.7rem; touch-action:none;
 }
+/* the finger lands on the picture itself, and a picture does not take the
+   stage's setting, so it is told here too that the page is not to be
+   scrolled or the picture dragged away by the browser */
+.shade-img{
+  touch-action:none;
+  user-select:none; -webkit-user-select:none; -webkit-touch-callout:none;
+}
 .shade-img{
   display:block; max-width:100%; max-height:100%; width:auto; height:auto;
   transform-origin:center center; transition:transform .18s ease;
@@ -2268,25 +2275,31 @@ html.is-wide-phone .nav-in{
   /* the bar is given the whole screen, not just the width of the paper */
   width:100vw; max-width:none; margin-inline:calc((100vw - 100%) / -2);
 }
-html.is-wide-phone .nav-mark{
-  order:-1; flex:0 0 100%;
-  display:flex; justify-content:center; padding-block:.15rem;
+/* The three lines, as before, but drawn at a size a finger can find, and
+   the list they open set large enough to read at this scale. */
+html.is-wide-phone .nav-burger{
+  width:74px; height:74px; padding:18px 10px; gap:9px;
 }
-html.is-wide-phone .nav-side{
-  display:flex; flex-wrap:wrap; justify-content:center;
-  flex:0 0 100%; gap:.3rem 2.3rem;
+html.is-wide-phone .nav-burger span{ height:2px; }
+html.is-wide-phone .nav-burger[aria-expanded="true"] span:nth-child(1){
+  transform:translateY(11px) rotate(45deg);
 }
-html.is-wide-phone .nav-side a{
-  font-size:1.35rem; letter-spacing:.12em; padding:.45rem .25rem;
+html.is-wide-phone .nav-burger[aria-expanded="true"] span:nth-child(3){
+  transform:translateY(-11px) rotate(-45deg);
 }
-html.is-wide-phone .nav-burger{ display:none; }
-html.is-wide-phone .nav-menu{ display:none !important; }
+html.is-wide-phone .nav-menu{ padding:.6rem 2.2rem 1.8rem; }
+html.is-wide-phone .nav-menu a{
+  font-size:1.5rem; letter-spacing:.18em; padding:1rem 0;
+}
 
 /* Held to the top of the screen on a telephone the way it is on a laptop.
    Being taken out of the flow, the sheet is given its height back as room
    at the top so nothing hides under it. */
 html.is-wide-phone .nav{
   position:fixed; top:0; left:0; right:0; width:100vw;
+  /* over the lace at the edges of the paper, which otherwise covers the
+     three lines and the left of the list they open */
+  z-index:60;
 }
 html.is-wide-phone #suite{ padding-top:var(--nav-real, 154px); }
 
