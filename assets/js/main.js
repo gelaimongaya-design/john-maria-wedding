@@ -1299,18 +1299,29 @@
     toggle.setAttribute('aria-label', on ? 'Pause music' : 'Play music');
   }
 
+  /* The rise starts from wherever the sound is now. It used to start from
+     silence every time it was asked for, so a second asking while the first
+     was still rising dropped the music back down, which was heard as a
+     sudden quietening. */
   function fadeUp(){
     clearInterval(fadeTimer);
-    var step = 0;
+    if (score.volume >= LEVEL - 0.01) { score.volume = LEVEL; return; }
+
+    var from = score.volume, step = 0, steps = 44;
     fadeTimer = setInterval(function(){
       step += 1;
-      score.volume = Math.min(LEVEL, (step / 44) * LEVEL);
-      if (step >= 44) clearInterval(fadeTimer);
+      score.volume = Math.min(LEVEL, from + (LEVEL - from) * (step / steps));
+      if (step >= steps) clearInterval(fadeTimer);
     }, 50);
   }
 
   function play(silent){
     if (scoreBroken) return;
+
+    /* already going: leave the sound where it is rather than taking it back
+       to silence and raising it again */
+    if (!score.paused){ showToggle(); setPlaying(true); return; }
+
     score.volume = silent ? 0 : LEVEL;
     var attempt = score.play();
     if (attempt && typeof attempt.then === 'function'){
@@ -1505,7 +1516,11 @@
     card.style.width      = '100%';
     fly.appendChild(card);
 
-    var sr = suite.getBoundingClientRect();
+    /* The letter grows to the width of the pages that follow it, not to the
+       width of the whole sheet, so that when the pages arrive underneath it
+       the two read as one piece of paper rather than two. */
+    var column = suite.querySelector('.leaf') || suite;
+    var sr = column.getBoundingClientRect();
     var k = sr.width / r.width;
     if (!(k > 1.02)) k = 1.02;
     var dx = (sr.left + sr.width / 2) - (r.left + r.width / 2);
