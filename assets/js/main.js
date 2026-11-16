@@ -1519,6 +1519,16 @@
     fly.style.width = r.width + 'px';
     document.body.appendChild(fly);
 
+    /* A fixed thing is placed against the page box, which need not start at
+       the corner of the window: room kept for the scrollbar sits outside it.
+       So the letter is put down, looked at, and nudged by whatever it is
+       out by, and it lands where the envelope left it. */
+    var put = fly.getBoundingClientRect();
+    if (Math.abs(put.left - r.left) > 0.5 || Math.abs(put.top - r.top) > 0.5){
+      fly.style.left = (2 * r.left - put.left) + 'px';
+      fly.style.top  = (2 * r.top  - put.top)  + 'px';
+    }
+
     card.style.transition = 'none';
     card.style.transform  = 'none';
     card.style.position   = 'static';

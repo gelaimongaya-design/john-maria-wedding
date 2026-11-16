@@ -52,7 +52,10 @@
 html{ -webkit-text-size-adjust:100%; }
 html.is-sealed, html.is-sealed body{ overflow:hidden; height:100%; }
 
-html{ scrollbar-gutter:stable; overflow-x:hidden; }
+/* room for the scrollbar is kept on both sides, not just the one it lives
+   on, so the paper sits in the middle of the window rather than a scrollbar
+   width to the left of it */
+html{ scrollbar-gutter:stable both-edges; overflow-x:hidden; }
 
 body{
   margin:0;
@@ -322,7 +325,7 @@ html.is-arriving{ overflow:hidden; }
 #suite::before, #suite::after{
   content:''; position:absolute; top:0; bottom:0;
   width:max(20px, calc(var(--sheet) * 0.137));
-  background:url(../img/edge-lace.png) repeat-y top left #FFFFFF;
+  background:url(../img/edge-lace.png?v=2) repeat-y top left #FFFFFF;
   background-size:100% auto;
   z-index:46; pointer-events:none;
 }
@@ -1925,8 +1928,11 @@ br.hold{ display:none; }
     rgba(0,0,0,0) 0, #000 2.6%, #000 97.4%, rgba(0,0,0,0) 100%);
 }
 
-#suite{ padding-inline:max(16px, calc(var(--sheet) * 0.12308)); }
-#suite::before, #suite::after{ width:max(16px, calc(var(--sheet) * 0.12308)); }
+/* the lace down the sides of the paper is the letter's own lace, cut from
+   the same picture, so the band is the same width and the same pattern
+   where the two meet */
+#suite{ padding-inline:max(16px, calc(var(--sheet) * 0.13796)); }
+#suite::before, #suite::after{ width:max(16px, calc(var(--sheet) * 0.13796)); }
 
 .pg-story{
   -webkit-mask-image:linear-gradient(to bottom, rgba(0,0,0,0) 0, #000 5.6%);
