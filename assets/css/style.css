@@ -216,8 +216,17 @@ html.is-arriving{ overflow:hidden; }
 
 .card-sheet{
   position:absolute; inset:0;
-  width:100%; height:100%; max-width:none;
-  box-shadow:0 10px 26px -16px rgba(80,76,68,.5);
+  max-width:none;
+
+  /* The card is drawn small inside the envelope and then grown to fill the
+     screen. A browser paints a picture once at the size it is laid out and
+     stretches that painting as it grows, which is what softened the letter.
+     So the letter is laid out at twice the size and halved again here: the
+     same picture on the screen, but painted with twice the detail to draw
+     on while it grows. The shadow is doubled to survive the halving. */
+  width:200%; height:200%;
+  transform:scale(.5); transform-origin:0 0;
+  box-shadow:0 20px 52px -32px rgba(80,76,68,.5);
 }
 
 #overture.is-open .env-card{ transform:translateY(-32.52cqw); }
@@ -2307,3 +2316,7 @@ html.is-wide-phone #suite{ padding-top:var(--nav-real, 154px); }
    when its toolbars slide away, that strip is the colour the page ends in
    rather than the surface the envelope was lying on. */
 html.is-wide-phone body{ background:var(--night); }
+
+/* On the photographs page the asking above the box is centred, so what is
+   typed in the box is centred too, at every width. */
+body.is-wall .share .field{ text-align:center; }
