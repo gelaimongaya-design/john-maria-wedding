@@ -2001,15 +2001,15 @@
 
     more.addEventListener('click', paint);
 
-    if ('IntersectionObserver' in window){
+    if (document.body.classList.contains('is-wall') || !('IntersectionObserver' in window)){
+      load();
+    } else {
       var eye = new IntersectionObserver(function(rows){
         for (var i = 0; i < rows.length; i++){
           if (rows[i].isIntersecting){ eye.disconnect(); load(); return; }
         }
       }, { rootMargin: '300px' });
       eye.observe(box);
-    } else {
-      load();
     }
   })();
 
