@@ -1309,11 +1309,12 @@
      silence every time it was asked for, so a second asking while the first
      was still rising dropped the music back down, which was heard as a
      sudden quietening. */
-  function fadeUp(){
+  function fadeUp(over){
     clearInterval(fadeTimer);
     if (score.volume >= LEVEL - 0.01) { score.volume = LEVEL; return; }
 
-    var from = score.volume, step = 0, steps = 44;
+    var steps = Math.max(4, Math.round((over || 2200) / 50));
+    var from = score.volume, step = 0;
     fadeTimer = setInterval(function(){
       step += 1;
       score.volume = Math.min(LEVEL, from + (LEVEL - from) * (step / steps));
@@ -1430,17 +1431,27 @@
     /* Started with no sound at all, so that nothing of the opening is heard
        while the spot is still being found; the sound is brought up only
        once the needle has landed. */
+    var aim = null;
     function goOn(){
       land();
+
+      /* Already standing on the right spot, so it simply carries on at the
+         volume it had. Creeping back up from silence was heard as the song
+         stopping and then starting again, when all that had happened was a
+         new page opening. */
+      if (settled || !(spot > 0)){ play(false); return; }
+
       play(true);
 
       var tries = 0;
-      var aim = window.setInterval(function(){
+      window.clearInterval(aim);
+      aim = window.setInterval(function(){
         tries++;
         land();
         if (settled || tries >= 25){
           window.clearInterval(aim);
-          if (!score.paused) fadeUp();
+          aim = null;
+          if (!score.paused) fadeUp(450);
         }
       }, 120);
     }
@@ -1448,21 +1459,26 @@
     if (score.readyState >= 1) goOn();
     else score.addEventListener('loadedmetadata', goOn, { once: true });
 
-    /* Some browsers will not let a page make a sound until it has been
-       touched. If that is what stops it, the first touch anywhere carries
-       the song on, so nobody has to go looking for the button. */
-    function onFirstTouch(){
-      document.removeEventListener('pointerdown', onFirstTouch, true);
-      document.removeEventListener('keydown', onFirstTouch, true);
-      document.removeEventListener('touchend', onFirstTouch, true);
-      if (score.paused && wanted) goOn();
+    /* A telephone will not let a page it has only just opened make a sound
+       until it has been touched, and the touch that asked for the page does
+       not count once the page has changed. So the song waits, already at
+       its spot, for the very first thing anybody does here: a tap, a scroll,
+       a key. Watching is set up at once, and watched for in the catching
+       pass, so even a touch in the first moment is not missed. */
+    var HEED = ['pointerdown', 'pointerup', 'touchstart', 'touchend',
+                'click', 'keydown', 'scroll', 'wheel'];
+    function heed(on){
+      HEED.forEach(function(ev){
+        if (on) document.addEventListener(ev, nudge, true);
+        else document.removeEventListener(ev, nudge, true);
+      });
     }
-    window.setTimeout(function(){
-      if (!score.paused) return;
-      document.addEventListener('pointerdown', onFirstTouch, true);
-      document.addEventListener('keydown', onFirstTouch, true);
-      document.addEventListener('touchend', onFirstTouch, true);
-    }, 700);
+    function nudge(){
+      if (!wanted || !score.paused){ heed(false); return; }
+      goOn();
+      window.setTimeout(function(){ if (!score.paused) heed(false); }, 160);
+    }
+    if (score.paused) heed(true);
   })();
 
   var RISEN     = 3300;
