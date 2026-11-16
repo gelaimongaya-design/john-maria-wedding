@@ -5,8 +5,13 @@
 <meta name="viewport" id="port" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>
 (function(){
-  var side = Math.min(screen.width || 9999, screen.height || 9999);
-  if (side < 820) {
+  /* A telephone, not merely a small screen. A laptop set to show everything
+     larger reports a short screen and was being taken for one, which laid
+     the whole site out as it is laid out on a telephone. A finger is what
+     tells them apart. */
+  var small  = Math.min(screen.width || 9999, screen.height || 9999) < 820;
+  var finger = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  if (small && finger) {
     var tag = document.getElementById('port');
     if (tag) tag.setAttribute('content', 'width=980, viewport-fit=cover');
     document.documentElement.className += ' is-wide-phone';
@@ -720,6 +725,6 @@
   </svg>
 </button>
 
-<script src="assets/js/main.js?v=62"></script>
+<script src="assets/js/main.js?v=63"></script>
 </body>
 </html>

@@ -70,8 +70,9 @@
       return d;
     }
 
-    var narrow = Math.min(screen.width || 9999, screen.height || 9999) < 820 ||
-                 window.innerWidth < 600;
+    var narrow = window.innerWidth < 600 ||
+                 (Math.min(screen.width || 9999, screen.height || 9999) < 820 &&
+                  !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches));
     var frag = document.createDocumentFragment();
     var many = narrow ? 10 : 15;
     for (var i = 0; i < many; i++) frag.appendChild(one(true, 0, i, many));
