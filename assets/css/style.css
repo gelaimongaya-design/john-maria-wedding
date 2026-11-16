@@ -182,17 +182,22 @@ html.is-arriving{ overflow:hidden; }
 
 #overture.is-open .env-sheet{ opacity:0; transition:opacity .22s ease .04s; }
 
-.env-wide, .env-pocket{ left:0; top:0; width:100%; opacity:0; }
+/* the picture carries a margin around the envelope so that the sprays keep
+   their outermost petals, so it is laid a little wider than the envelope
+   itself and pulled back up and to the left by that same margin */
+.env-wide, .env-pocket{
+  left:-3.05011%; top:-0.78125%; width:104.13943%; opacity:0;
+}
 
 .env-wide{
   z-index:1;
-  clip-path:polygon(0 0, 100% 0, 100% 38.5%, 75.2% 38.5%, 49.7% 56.8%,
-                    24.6% 38.5%, 0 38.5%);
+  clip-path:polygon(0 0, 100% 0, 100% 37.616%, 75.14% 37.616%, 50.653% 55.14%,
+                    26.551% 37.616%, 0 37.616%);
 }
 .env-pocket{
   z-index:3;
-  clip-path:polygon(0% 38.5%, 24.6% 38.5%, 49.7% 56.8%, 75.2% 38.5%,
-                    100% 38.5%, 100% 100%, 0% 100%);
+  clip-path:polygon(0 37.616%, 26.551% 37.616%, 50.653% 55.14%, 75.14% 37.616%,
+                    100% 37.616%, 100% 100%, 0 100%);
 }
 
 #overture.is-open .env-pocket{ opacity:1; transition:opacity .26s ease .24s; }
