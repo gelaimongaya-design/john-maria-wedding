@@ -1516,11 +1516,9 @@
     card.style.width      = '100%';
     fly.appendChild(card);
 
-    /* The letter grows to the width of the pages that follow it, not to the
-       width of the whole sheet, so that when the pages arrive underneath it
-       the two read as one piece of paper rather than two. */
-    var column = suite.querySelector('.leaf') || suite;
-    var sr = column.getBoundingClientRect();
+    /* The letter grows to the width of the paper itself, lace edges and all,
+       so the two are the same width when they meet. */
+    var sr = suite.getBoundingClientRect();
     var k = sr.width / r.width;
     if (!(k > 1.02)) k = 1.02;
     var dx = (sr.left + sr.width / 2) - (r.left + r.width / 2);
@@ -1576,6 +1574,14 @@
         scale = k;
         y = -vh * ease((t - ZOOM - SETTLE) / SCROLL);
       }
+      /* On its way up the letter is let go of, so the paper below is not met
+         with a hard edge but with the letter thinning away into it. */
+      var dim = 1;
+      if (t > ZOOM + SETTLE){
+        dim = 1 - ((t - ZOOM - SETTLE) / SCROLL) * 1.45;
+        if (dim < 0) dim = 0;
+      }
+
       var cut = glide(Math.min(1, t / CLIP));
       var sill = apex0 + (floor - apex0) * cut;
       var rise = r.top - dy * g;
@@ -1583,6 +1589,7 @@
       scene.push({ transform: move });
       frames.push({
         transform: move,
+        opacity: dim.toFixed(3),
         clipPath: 'polygon(' + lx.toFixed(0) + 'px -' + (r.height * 2).toFixed(0) + 'px, ' +
                   rx.toFixed(0) + 'px -' + (r.height * 2).toFixed(0) + 'px, ' +
                   rx.toFixed(0) + 'px ' + local(right0, sill, cut, scale, rise) + 'px, ' +
