@@ -1518,6 +1518,19 @@
       var bot0 = (cr.top - r.top) + cr.height * MSG_BOT;
       dy = r.top + (top0 + bot0) / 2 * k - vh / 2;
       if (!(dy > 0)) dy = 0;
+
+      /* The letter is about to be grown to fill the screen. A browser paints
+         a picture once, at the size it was laid out, and stretches that
+         painting as it grows, which leaves the words soft. So the letter is
+         laid out at the size it is about to become and shrunk back to fit:
+         the same card on the screen, painted with all the detail it will
+         need before the growing starts. */
+      if (k > 1.05){
+        sheet.style.transformOrigin = '0 0';
+        sheet.style.width  = (k * 100).toFixed(2) + '%';
+        sheet.style.height = (k * 100).toFixed(2) + '%';
+        sheet.style.transform = 'scale(' + (1 / k).toFixed(5) + ')';
+      }
     }
 
     function armY(x){
