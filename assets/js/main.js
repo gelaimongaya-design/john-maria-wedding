@@ -1669,7 +1669,8 @@
     if (el) el.addEventListener('click', unseal);
   });
 
-  if (/(^|[?&])open=1(&|$)/.test(location.search)){
+  if (document.documentElement.classList.contains('is-straight-in') ||
+      /(^|[?&])open=1(&|$)/.test(location.search)){
     if (overture && overture.isConnected) overture.remove();
     lightSuite();
     if (location.hash && location.hash.length > 1){
@@ -1751,12 +1752,15 @@
       return first;
     }
 
+    /* Where they were, and that the envelope is already open, are put away
+       for the visit rather than hung on the end of the address. The address
+       stays as plain as it was written. */
     var out = document.getElementById('photo-link');
     if (out) out.addEventListener('click', function(){
+      try { window.sessionStorage.setItem('jm-open', '1'); } catch (ignored) {}
       var here = whereAmI();
       if (!here) return;
-      try { sessionStorage.setItem('jm-from', here); } catch (ignored) {}
-      out.setAttribute('href', 'photos.html?from=' + encodeURIComponent(here));
+      try { window.sessionStorage.setItem('jm-from', here); } catch (ignored) {}
     });
 
     var backs = ['back-top', 'back-foot'];
@@ -1771,7 +1775,7 @@
     if (!from || !/^[A-Za-z]+$/.test(from)) return;
     for (var k = 0; k < backs.length; k++){
       var el = document.getElementById(backs[k]);
-      if (el) el.setAttribute('href', 'index.html?open=1#' + from);
+      if (el) el.setAttribute('href', 'index.html#' + from);
     }
   })();
 

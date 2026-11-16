@@ -40,7 +40,16 @@
 <link rel="stylesheet" href="assets/css/style.css?v=99">
 <script>
 (function(){
-  if (!/(^|[?&])open=1(&|$)/.test(location.search)) return;
+  var asked = /(^|[?&])open=1(&|$)/.test(location.search);
+  if (!asked) {
+    try {
+      if (window.sessionStorage.getItem('jm-open') === '1') {
+        asked = true;
+        window.sessionStorage.removeItem('jm-open');
+      }
+    } catch (ignored) {}
+  }
+  if (!asked) return;
   var h = document.documentElement;
   h.className = (h.className.replace(/\bis-sealed\b/, '') + ' is-straight-in').trim();
 })();
@@ -708,6 +717,6 @@
   </svg>
 </button>
 
-<script src="assets/js/main.js?v=61"></script>
+<script src="assets/js/main.js?v=62"></script>
 </body>
 </html>
