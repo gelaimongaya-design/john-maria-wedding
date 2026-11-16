@@ -2193,7 +2193,7 @@ body.is-held{ overflow:hidden; }
 
 .shade{
   position:fixed; inset:0; z-index:90;
-  background:rgba(8,8,8,.96);
+  background:#070707;
   display:grid; grid-template-rows:1fr auto;
 }
 .shade[hidden]{ display:none; }
@@ -2201,7 +2201,7 @@ body.is-held{ overflow:hidden; }
 .shade-stage{
   position:relative; overflow:hidden;
   display:grid; place-items:center;
-  touch-action:none;
+  padding:.7rem; touch-action:none;
 }
 .shade-img{
   display:block; max-width:100%; max-height:100%; width:auto; height:auto;
