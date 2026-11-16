@@ -1546,6 +1546,40 @@
      side taken off. */
   var BARE = 0.72408;
 
+  /* A browser paints a picture once, at the size it was laid out, and
+     stretches that painting if it is later made bigger, which leaves the
+     words soft. So the letter is laid out at the size it is about to become
+     and shrunk back to fit: the same card on the screen, painted with all
+     the detail it will need. This is done the moment the envelope is opened
+     rather than when the letter starts to grow, because a telephone wants
+     those few seconds to paint a picture this large. */
+  var dressed = 0;
+  function readyPaper(card){
+    if (!card){
+      if (!overture || !overture.isConnected) return;
+      card = overture.querySelector('.env-card');
+    }
+    var sheet = card && card.querySelector('.card-sheet');
+    if (!sheet) return;
+
+    var r = card.getBoundingClientRect();
+    var sr = suite.getBoundingClientRect();
+    if (!(r.width > 0) || !(sr.width > 0)) return;
+
+    var k = sr.width / r.width;
+    if (document.documentElement.classList.contains('is-wide-phone')) k /= BARE;
+    if (!(k > 1.05)) return;
+    if (dressed && Math.abs(dressed - k) < 0.01) return;
+
+    dressed = k;
+    sheet.style.transformOrigin = '0 0';
+    sheet.style.width  = (k * 100).toFixed(2) + '%';
+    sheet.style.height = (k * 100).toFixed(2) + '%';
+    sheet.style.transform = 'scale(' + (1 / k).toFixed(5) + ')';
+    if (sheet.decode) sheet.decode().catch(function(){});
+  }
+  window.addEventListener('resize', function(){ dressed = 0; readyPaper(); });
+
   /* The lower edge of what is shown travels from the mouth of the envelope,
      which is a V in screen terms, to that line on the letter itself. */
   function seam(y0, hold, open, scale, top){
@@ -1608,18 +1642,7 @@
       dy = r.top + (top0 + bot0) / 2 * k - vh / 2;
       if (!(dy > 0)) dy = 0;
 
-      /* The letter is about to be grown to fill the screen. A browser paints
-         a picture once, at the size it was laid out, and stretches that
-         painting as it grows, which leaves the words soft. So the letter is
-         laid out at the size it is about to become and shrunk back to fit:
-         the same card on the screen, painted with all the detail it will
-         need before the growing starts. */
-      if (k > 1.05){
-        sheet.style.transformOrigin = '0 0';
-        sheet.style.width  = (k * 100).toFixed(2) + '%';
-        sheet.style.height = (k * 100).toFixed(2) + '%';
-        sheet.style.transform = 'scale(' + (1 / k).toFixed(5) + ')';
-      }
+      readyPaper(card);
     }
 
     function armY(x){
@@ -1753,6 +1776,7 @@
     opened = true;
 
     overture.classList.add('is-open');
+    readyPaper();
     startScore();
 
     window.setTimeout(function(){
