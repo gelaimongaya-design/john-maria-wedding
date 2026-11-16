@@ -2281,3 +2281,16 @@ html.is-wide-phone .nav-side a{
 }
 html.is-wide-phone .nav-burger{ display:none; }
 html.is-wide-phone .nav-menu{ display:none !important; }
+
+/* Held to the top of the screen on a telephone the way it is on a laptop.
+   Being taken out of the flow, the sheet is given its height back as room
+   at the top so nothing hides under it. */
+html.is-wide-phone .nav{
+  position:fixed; top:0; left:0; right:0; width:100vw;
+}
+html.is-wide-phone #suite{ padding-top:var(--nav-real, 154px); }
+
+/* Where a telephone leaves a strip of nothing under the last page, as it can
+   when its toolbars slide away, that strip is the colour the page ends in
+   rather than the surface the envelope was lying on. */
+html.is-wide-phone body{ background:var(--night); }
