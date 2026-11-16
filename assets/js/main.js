@@ -1284,6 +1284,12 @@
   var scoreBroken = false;
   var fadeTimer = null;
 
+  /* Whether the music is meant to be playing, which is not the same as
+     whether it is playing. Leaving the page, or turning to another window,
+     stops the sound without anybody asking for silence; only the button
+     asks for that. */
+  var wanted = false;
+
   function showToggle(){ if (!scoreBroken) toggle.hidden = false; }
   function breakScore(){ scoreBroken = true; toggle.hidden = true; }
 
@@ -1317,6 +1323,7 @@
 
   function play(silent){
     if (scoreBroken) return;
+    wanted = true;
 
     /* already going: leave the sound where it is rather than taking it back
        to silence and raising it again */
@@ -1341,18 +1348,28 @@
 
   toggle.addEventListener('click', function(){
     if (score.paused){
+      land();
       play(false);
     } else {
+      wanted = false;
       clearInterval(fadeTimer);
       score.pause();
       setPlaying(false);
+      mark();
     }
   });
 
   document.addEventListener('visibilitychange', function(){
-    if (document.hidden && !score.paused){
-      score.pause();
-      setPlaying(false);
+    if (document.hidden){
+      if (!score.paused){
+        mark();
+        clearInterval(fadeTimer);
+        score.pause();
+        setPlaying(false);
+      }
+    } else if (wanted && score.paused){
+      land();
+      play(false);
     }
   });
 
@@ -1360,12 +1377,18 @@
      it had got to is kept for this visit, so going to the photographs and
      back does not cut the song off and start it again. */
   var KEEP = 'jm-score';
+  var KEEP_ON = 'jm-score-on';
   var marked = 0;
 
+  /* The spot is kept whether or not the music is playing, because a page
+     that is being left behind stops its own sound a moment before it goes.
+     Forgetting the spot there was what sent the song back to its opening
+     bar on the other side. */
   function mark(){
     try {
-      window.sessionStorage.setItem(KEEP,
-        score.paused ? '' : String(Math.max(0, score.currentTime || 0)));
+      var at = Math.max(0, score.currentTime || 0);
+      if (at > 0.05) window.sessionStorage.setItem(KEEP, String(at));
+      window.sessionStorage.setItem(KEEP_ON, wanted ? '1' : '');
     } catch (ignored) {}
   }
 
@@ -1373,37 +1396,49 @@
     var now = Date.now();
     if (!score.paused && now - marked > 2000){ marked = now; mark(); }
   });
-  score.addEventListener('pause', mark);
   window.addEventListener('pagehide', mark);
 
+  /* Where the song had got to when the last page was left. */
+  var spot = 0, carried = false, settled = false;
+  try {
+    spot = parseFloat(window.sessionStorage.getItem(KEEP) || '') || 0;
+    carried = window.sessionStorage.getItem(KEEP_ON) === '1';
+  } catch (ignored) {}
+  if (!(spot > 0)) spot = 0;
+
+  /* Put the needle down on the kept spot. The sound file may still be on
+     its way, in which case the asking is quietly dropped, so it is asked
+     again on every sign of the file arriving, and once more the moment
+     anybody reaches for the button. */
+  function land(){
+    if (settled || !(spot > 0) || score.readyState < 1) return;
+    try { score.currentTime = spot; } catch (ignored) { return; }
+    if (Math.abs((score.currentTime || 0) - spot) <= 1.5) settled = true;
+  }
+
+  if (spot > 0){
+    ['loadedmetadata', 'loadeddata', 'canplay'].forEach(function(ev){
+      score.addEventListener(ev, land);
+    });
+    land();
+  }
+
   (function carryOn(){
-    var held = '';
-    try { held = window.sessionStorage.getItem(KEEP) || ''; } catch (ignored) { return; }
-    if (!held) return;
+    if (!carried) return;
+    wanted = true;
 
-    var where = parseFloat(held);
-    if (!(where > 0)) where = 0;
-
-    /* A telephone will not always take the spot on the first asking: the
-       sound file is still arriving, and the asking is quietly dropped, which
-       starts the song from its beginning. So it is started with no sound at
-       all, the spot is asked for again until it takes, and only then is the
-       sound brought up. Nothing of the beginning is ever heard. */
+    /* Started with no sound at all, so that nothing of the opening is heard
+       while the spot is still being found; the sound is brought up only
+       once the needle has landed. */
     function goOn(){
-      try { score.currentTime = where; } catch (ignored) {}
+      land();
       play(true);
 
       var tries = 0;
       var aim = window.setInterval(function(){
         tries++;
-        var there = Math.abs((score.currentTime || 0) - where) <= 1.5;
-
-        if (!there && score.readyState >= 1){
-          try { score.currentTime = where; } catch (ignored) {}
-          there = Math.abs((score.currentTime || 0) - where) <= 1.5;
-        }
-
-        if (there || tries >= 14){
+        land();
+        if (settled || tries >= 25){
           window.clearInterval(aim);
           if (!score.paused) fadeUp();
         }
@@ -1413,25 +1448,21 @@
     if (score.readyState >= 1) goOn();
     else score.addEventListener('loadedmetadata', goOn, { once: true });
 
-    /* Some telephones will not let a page make a sound until it has been
+    /* Some browsers will not let a page make a sound until it has been
        touched. If that is what stops it, the first touch anywhere carries
        the song on, so nobody has to go looking for the button. */
-    var waiting = false;
     function onFirstTouch(){
       document.removeEventListener('pointerdown', onFirstTouch, true);
+      document.removeEventListener('keydown', onFirstTouch, true);
       document.removeEventListener('touchend', onFirstTouch, true);
-      waiting = false;
-      if (score.paused) goOn();
+      if (score.paused && wanted) goOn();
     }
     window.setTimeout(function(){
-      if (!score.paused || waiting) return;
-      var still = '';
-      try { still = window.sessionStorage.getItem(KEEP) || ''; } catch (ignored) {}
-      if (!still) return;
-      waiting = true;
+      if (!score.paused) return;
       document.addEventListener('pointerdown', onFirstTouch, true);
+      document.addEventListener('keydown', onFirstTouch, true);
       document.addEventListener('touchend', onFirstTouch, true);
-    }, 900);
+    }, 700);
   })();
 
   var RISEN     = 3300;
