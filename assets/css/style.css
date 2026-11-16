@@ -2170,7 +2170,9 @@ body.is-wall .nav-in-wall{
   font:inherit; font-size:.8rem; padding:.5rem .8rem; width:11rem;
 }
 .wall-find input::placeholder{ color:#8E8D88; }
-.wall-find input:focus-visible{ outline:1px solid #fff; outline-offset:2px; }
+.wall-find input:focus-visible{ outline:none; border-color:#F2F1EC; }
+.wall-find input::-webkit-search-cancel-button,
+.wall-find input::-webkit-search-decoration{ -webkit-appearance:none; appearance:none; }
 .sr-only{
   position:absolute; width:1px; height:1px; margin:-1px; padding:0;
   overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
@@ -2238,3 +2240,9 @@ body.is-held{ overflow:hidden; }
 .shade-x{ top:calc(.3rem + env(safe-area-inset-top,0px)); right:.3rem; font-size:1.5rem; }
 .shade-prev{ left:.1rem; top:50%; margin-top:-1.5rem; }
 .shade-next{ right:.1rem; top:50%; margin-top:-1.5rem; }
+
+/* On a telephone the page is laid out at the width of a laptop and scaled
+   down to fit, so the pages read the way they were drawn. There the paper is
+   given the whole screen: the grey either side of it would be a third of a
+   small screen spent on nothing. */
+html.is-wide-phone #suite{ --sheet:100vw; }

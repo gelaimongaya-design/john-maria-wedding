@@ -1900,11 +1900,30 @@
         : (n === 1 ? 'One of ' + all.length : n + ' of ' + all.length);
     }
 
+    /* Sifting makes the page shorter, and a shorter page drags the view back
+       up, which carries the box being typed in off the screen. So the row is
+       measured before and after and the scroll is moved by the difference,
+       leaving it exactly where it was on the screen. */
     function redraw(){
+      var seat = sift ? sift.getBoundingClientRect().top : null;
+
       grid.textContent = '';
       shown = 0;
       paint();
       count(kept().length);
+
+      if (seat === null) return;
+      var now = sift.getBoundingClientRect().top;
+      if (Math.abs(now - seat) > 1) window.scrollBy(0, now - seat);
+
+      /* If the page ran out of room to hold it there, as it does when the
+         sifting leaves nothing, the row is brought back into sight anyway,
+         measured against what the keyboard leaves of the screen. */
+      var box = sift.getBoundingClientRect();
+      var deep = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+      if (box.top < 4 || box.bottom > deep - 4){
+        sift.scrollIntoView({ block: 'center' });
+      }
     }
 
     for (var t = 0; t < tabs.length; t++){

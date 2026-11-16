@@ -8,7 +8,8 @@
   var side = Math.min(screen.width || 9999, screen.height || 9999);
   if (side < 820) {
     var tag = document.getElementById('port');
-    if (tag) tag.setAttribute('content', 'width=1024, viewport-fit=cover');
+    if (tag) tag.setAttribute('content', 'width=980, viewport-fit=cover');
+    document.documentElement.className += ' is-wide-phone';
   }
 })();
 </script>
@@ -36,7 +37,7 @@
 
 <link rel="preload" href="assets/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/reset.css?v=25">
-<link rel="stylesheet" href="assets/css/style.css?v=91">
+<link rel="stylesheet" href="assets/css/style.css?v=92">
 <script>
 (function(){
   if (!/(^|[?&])open=1(&|$)/.test(location.search)) return;
@@ -707,6 +708,6 @@
   </svg>
 </button>
 
-<script src="assets/js/main.js?v=56"></script>
+<script src="assets/js/main.js?v=57"></script>
 </body>
 </html>
