@@ -1483,8 +1483,8 @@
 
   function glide(t){ return t * t * t * (t * (t * 6 - 15) + 10); }
 
-  var MSG_TOP = 0.1385;
-  var MSG_BOT = 0.3571;
+  var MSG_TOP = 0.1396;
+  var MSG_BOT = 0.3527;
 
   var V_APEX = 0.4239;
   var V_SLOPE = 0.8778;
@@ -1557,7 +1557,18 @@
     var floor = Math.max(apex0 + (vh + 60 - apex0) * 2,
                          r.top - dy + r.height * k + 120);
 
-    var total = ZOOM + SETTLE + SCROLL;
+    /* Where the grown letter's lower edge comes to rest, and how far it has
+       to travel for that edge to reach the top of the screen. The pages are
+       sent off from exactly that edge and given the same distance and the
+       same easing, so the foot of the letter and the head of the first page
+       stay touching the whole way up: one long sheet, not two. */
+    var foot = r.top - dy + r.height * k;
+    var lift = foot - sr.top;
+    if (!(lift > vh)) lift = vh;
+    var run = Math.round(SCROLL * Math.min(1.5, Math.max(1, lift / vh * 0.62)));
+
+    var total = ZOOM + SETTLE + run;
+    FADE = total + 160;
     var ease  = bezier(EASE[0], EASE[1], EASE[2], EASE[3]);
 
     var frames = [];
@@ -1572,14 +1583,7 @@
         scale = k;
       } else {
         scale = k;
-        y = -vh * ease((t - ZOOM - SETTLE) / SCROLL);
-      }
-      /* On its way up the letter is let go of, so the paper below is not met
-         with a hard edge but with the letter thinning away into it. */
-      var dim = 1;
-      if (t > ZOOM + SETTLE){
-        dim = 1 - ((t - ZOOM - SETTLE) / SCROLL) * 1.45;
-        if (dim < 0) dim = 0;
+        y = -lift * ease((t - ZOOM - SETTLE) / run);
       }
 
       var cut = glide(Math.min(1, t / CLIP));
@@ -1589,7 +1593,6 @@
       scene.push({ transform: move });
       frames.push({
         transform: move,
-        opacity: dim.toFixed(3),
         clipPath: 'polygon(' + lx.toFixed(0) + 'px -' + (r.height * 2).toFixed(0) + 'px, ' +
                   rx.toFixed(0) + 'px -' + (r.height * 2).toFixed(0) + 'px, ' +
                   rx.toFixed(0) + 'px ' + local(right0, sill, cut, scale, rise) + 'px, ' +
@@ -1607,8 +1610,8 @@
     }
 
     suite.animate(
-      [{ transform: 'translateY(' + vh + 'px)' }, { transform: 'none' }],
-      { duration: SCROLL, delay: ZOOM + SETTLE, fill: 'backwards',
+      [{ transform: 'translateY(' + lift.toFixed(1) + 'px)' }, { transform: 'none' }],
+      { duration: run, delay: ZOOM + SETTLE, fill: 'backwards',
         easing: 'cubic-bezier(' + EASE.join(',') + ')' }
     );
     return fly;
@@ -1636,9 +1639,12 @@
         document.documentElement.classList.remove('is-arriving');
       }
 
+      /* The envelope is let go of while the letter is still growing. By the
+         time the letter fills the screen there is nothing left beside it,
+         so its edges are the only edges in sight. */
       var bowOut = window.setTimeout(function(){
         overture.classList.add('is-fading');
-      }, calm ? 0 : Math.round(ZOOM + SETTLE + SCROLL * 0.42));
+      }, calm ? 0 : Math.round(ZOOM * 0.66));
 
       function dropEarly(){
         overture.classList.add('is-quick', 'is-fading');

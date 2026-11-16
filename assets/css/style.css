@@ -209,7 +209,7 @@ html.is-arriving{ overflow:hidden; }
 .env-card{
 
   position:absolute; bottom:-16.86cqw; left:32.65%; width:33.8%;
-  aspect-ratio:2080/2982;
+  aspect-ratio:3240/4571;
   transform-origin:50% 0;
   transition:transform 2.1s cubic-bezier(.42,.02,.2,1) 1.25s;
 }
