@@ -1344,6 +1344,65 @@
     }
   });
 
+  /* The music belongs to the whole invitation, not to one page of it. Where
+     it had got to is kept for this visit, so going to the photographs and
+     back does not cut the song off and start it again. */
+  var KEEP = 'jm-score';
+  var marked = 0;
+
+  function mark(){
+    try {
+      window.sessionStorage.setItem(KEEP,
+        score.paused ? '' : String(Math.max(0, score.currentTime || 0)));
+    } catch (ignored) {}
+  }
+
+  score.addEventListener('timeupdate', function(){
+    var now = Date.now();
+    if (!score.paused && now - marked > 2000){ marked = now; mark(); }
+  });
+  score.addEventListener('pause', mark);
+  window.addEventListener('pagehide', mark);
+
+  (function carryOn(){
+    var held = '';
+    try { held = window.sessionStorage.getItem(KEEP) || ''; } catch (ignored) { return; }
+    if (!held) return;
+
+    var where = parseFloat(held);
+    if (!(where > 0)) where = 0;
+
+    function goOn(){
+      try { score.currentTime = where; } catch (ignored) {}
+      play(false);
+    }
+
+    /* the spot is set first and the song started second, so it carries on
+       from where it was rather than beginning again and jumping */
+    if (score.readyState >= 1) goOn();
+    else score.addEventListener('loadedmetadata', goOn, { once: true });
+
+    /* Some telephones will not let a page make a sound until it has been
+       touched. If that is what stops it, the first touch anywhere carries
+       the song on, so nobody has to go looking for the button. */
+    var waiting = false;
+    function onFirstTouch(){
+      document.removeEventListener('pointerdown', onFirstTouch, true);
+      document.removeEventListener('touchend', onFirstTouch, true);
+      waiting = false;
+      if (score.paused) goOn();
+    }
+    window.setTimeout(function(){
+      if (!score.paused || waiting) return;
+      var still = '';
+      try { still = window.sessionStorage.getItem(KEEP) || ''; } catch (ignored) {}
+      if (!still) return;
+      waiting = true;
+      document.addEventListener('pointerdown', onFirstTouch, true);
+      document.addEventListener('touchend', onFirstTouch, true);
+    }, 900);
+  })();
+
   var RISEN     = 3300;
   var HOLD      = 5900;
   var HOLD_CALM = 1400;
@@ -2057,7 +2116,7 @@
 
     var shade, stage, shot, frame, who, drop, at = -1, armed = false;
     var zoom = 1, tx = 0, ty = 0, touches = {}, gap0 = 0, zoom0 = 1,
-        mid0 = null, from0 = null, tapAt = 0, pan = null;
+        mid0 = null, from0 = null, tapAt = 0, pan = null, slide = 0;
 
     function build(){
       if (shade) return;
@@ -2090,8 +2149,11 @@
 
     function place(){
       if (!shot) return;
-      shot.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + zoom + ')';
+      shot.style.transform =
+        'translate(' + (tx + slide) + 'px,' + ty + 'px) scale(' + zoom + ')';
       shot.classList.toggle('is-near', zoom > 1.02);
+      if (slide) shot.style.opacity = String(Math.max(.45, 1 - Math.abs(slide) / 520));
+      else shot.style.opacity = '';
     }
 
     function rein(){
@@ -2138,7 +2200,10 @@
           return;
         }
         tapAt = now;
-        pan = { x: ev.clientX, y: ev.clientY, tx: tx, ty: ty, at: now };
+        pan = { x: ev.clientX, y: ev.clientY, tx: tx, ty: ty, at: now, way: '' };
+        /* while a finger is down the picture must follow it exactly, so the
+           easing that smooths the zoom is taken off for the length of the drag */
+        shot.classList.add('is-dragging');
       });
 
       stage.addEventListener('pointermove', function(ev){
@@ -2161,12 +2226,32 @@
           return;
         }
 
-        if (pan && zoom > 1.02){
+        if (!pan) return;
+
+        if (zoom > 1.02){
           tx = pan.tx + (ev.clientX - pan.x);
           ty = pan.ty + (ev.clientY - pan.y);
           rein(); place();
+          return;
+        }
+
+        /* Not zoomed: the picture is carried along with the finger, so the
+           next one is already on its way before the finger is lifted. */
+        var dx = ev.clientX - pan.x, dy = ev.clientY - pan.y;
+        if (!pan.way && (Math.abs(dx) > 8 || Math.abs(dy) > 8)){
+          pan.way = Math.abs(dx) > Math.abs(dy) ? 'side' : 'down';
+        }
+        if (pan.way === 'side'){
+          slide = dx;
+          place();
         }
       });
+
+      function settle(){
+        shot.classList.remove('is-dragging');
+        slide = 0;
+        place();
+      }
 
       function lift(ev){
         delete touches[ev.pointerId];
@@ -2174,17 +2259,33 @@
 
         if (pan && zoom <= 1.02){
           var dx = ev.clientX - pan.x, dy = ev.clientY - pan.y;
-          if (Date.now() - pan.at < 600 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)){
+          var took = Date.now() - pan.at;
+          var box = stage.getBoundingClientRect();
+          var enough = Math.max(38, box.width * 0.13);
+          var flick = took < 420 && Math.abs(dx) > 22;
+
+          if (pan.way === 'side' && (Math.abs(dx) > enough || flick)){
+            pan = null;
+            shot.classList.remove('is-dragging');
+            slide = 0;
             step(dx < 0 ? 1 : -1);
-          } else if (dy > 110 && Math.abs(dy) > Math.abs(dx)){
+            return;
+          }
+          if (pan.way === 'down' && dy > 110){
+            pan = null;
+            settle();
             shut();
+            return;
           }
         }
         pan = null;
+        settle();
       }
 
       stage.addEventListener('pointerup', lift);
-      stage.addEventListener('pointercancel', function(ev){ delete touches[ev.pointerId]; pan = null; mid0 = null; });
+      stage.addEventListener('pointercancel', function(ev){
+        delete touches[ev.pointerId]; pan = null; mid0 = null; settle();
+      });
 
       stage.addEventListener('wheel', function(ev){
         if (frame && !frame.hidden) return;
@@ -2208,7 +2309,7 @@
 
       at = i;
       var f = list[i];
-      zoom = 1; tx = 0; ty = 0;
+      zoom = 1; tx = 0; ty = 0; slide = 0;
 
       if (f.video){
         shot.hidden = true; shot.removeAttribute('src');

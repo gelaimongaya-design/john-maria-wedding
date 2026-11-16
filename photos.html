@@ -27,7 +27,7 @@
 
 <link rel="preload" href="assets/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/reset.css?v=25">
-<link rel="stylesheet" href="assets/css/style.css?v=92">
+<link rel="stylesheet" href="assets/css/style.css?v=94">
 </head>
 <body class="is-wall">
 
@@ -98,6 +98,19 @@
   </section>
 </main>
 
-<script src="assets/js/main.js?v=57"></script>
+<audio id="score" loop preload="auto" hidden>
+  <source src="assets/audio/score.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music" id="music-toggle" type="button" aria-label="Play music" aria-pressed="false" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path class="m-on"  d="M4 9v6h4l5 4V5L8 9H4z M16.5 8.5a5 5 0 0 1 0 7 M19 6a8.5 8.5 0 0 1 0 12"
+          fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+    <path class="m-off" d="M4 9v6h4l5 4V5L8 9H4z M17 9.5l4 5 M21 9.5l-4 5"
+          fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<script src="assets/js/main.js?v=59"></script>
 </body>
 </html>

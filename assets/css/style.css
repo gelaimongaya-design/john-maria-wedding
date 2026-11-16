@@ -2211,6 +2211,7 @@ body.is-held{ overflow:hidden; }
   user-select:none; -webkit-user-drag:none;
 }
 .shade-img.is-near{ transition:none; cursor:grab; }
+.shade-img.is-dragging{ transition:none; }
 .shade-frame{ width:min(94vw,980px); height:min(78svh,600px); border:0; background:#000; }
 
 .shade-foot{
@@ -2246,3 +2247,14 @@ body.is-held{ overflow:hidden; }
    given the whole screen: the grey either side of it would be a third of a
    small screen spent on nothing. */
 html.is-wide-phone #suite{ --sheet:100vw; }
+
+/* The arch that cuts the paper away above a dark page is a strip laid over
+   the seam. Where its top edge met the page above, a hair of the page could
+   show through once the phone drew it at a part of a pixel, which read as a
+   line straight across. The strip is pulled up by one pixel so the two
+   overlap, and it is given the paper under its picture so nothing can show
+   through it. */
+.seam-arch::after{
+  margin-top:-1px;
+  background-color:var(--paper);
+}
