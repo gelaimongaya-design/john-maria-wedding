@@ -2,7 +2,16 @@
 <html lang="en" class="is-sealed">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" id="port" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+(function(){
+  var side = Math.min(screen.width || 9999, screen.height || 9999);
+  if (side < 820) {
+    var tag = document.getElementById('port');
+    if (tag) tag.setAttribute('content', 'width=1024, viewport-fit=cover');
+  }
+})();
+</script>
 
 <title>John + Maria</title>
 <meta name="description" content="John Rolly Gumbi and Ma. Rhea Gabas invite you to an intimate wedding in the forest. 2 February 2027, Timmy in the Woods, Antipolo, Rizal.">
@@ -27,7 +36,7 @@
 
 <link rel="preload" href="assets/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/reset.css?v=25">
-<link rel="stylesheet" href="assets/css/style.css?v=88">
+<link rel="stylesheet" href="assets/css/style.css?v=90">
 <script>
 (function(){
   if (!/(^|[?&])open=1(&|$)/.test(location.search)) return;
@@ -698,6 +707,6 @@
   </svg>
 </button>
 
-<script src="assets/js/main.js?v=54"></script>
+<script src="assets/js/main.js?v=56"></script>
 </body>
 </html>

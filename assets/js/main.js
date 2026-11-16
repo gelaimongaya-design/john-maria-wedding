@@ -70,7 +70,8 @@
       return d;
     }
 
-    var narrow = window.innerWidth < 600;
+    var narrow = Math.min(screen.width || 9999, screen.height || 9999) < 820 ||
+                 window.innerWidth < 600;
     var frag = document.createDocumentFragment();
     var many = narrow ? 10 : 15;
     for (var i = 0; i < many; i++) frag.appendChild(one(true, 0, i, many));
@@ -181,6 +182,29 @@
   })();
 
   var RSVP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwX7itsDawc_Cr2QFfYpwr4Q4VMH3MoiU3BDVISYa8P35Sl_t4vzWMe3ndbmg5jAn4N/exec';
+
+  var MINE_KEY = 'jm-mine';
+
+  function myShares(){
+    try { return JSON.parse(window.localStorage.getItem(MINE_KEY) || '{}') || {}; }
+    catch (ignored) { return {}; }
+  }
+
+  function keepMine(id, token){
+    try {
+      var all = myShares();
+      all[id] = token;
+      window.localStorage.setItem(MINE_KEY, JSON.stringify(all));
+    } catch (ignored) {}
+  }
+
+  function forgetMine(id){
+    try {
+      var all = myShares();
+      delete all[id];
+      window.localStorage.setItem(MINE_KEY, JSON.stringify(all));
+    } catch (ignored) {}
+  }
 
   var woken = false;
 
@@ -902,7 +926,10 @@
             from: nameEl.value.trim(),
             name: entry.sentAs || entry.file.name,
             folder: entry.folder || '',
-            size: entry.file.size
+            size: entry.file.size,
+            id: entry.fileId || ''
+          }).then(function(res){
+            if (res && res.ok && res.token && entry.fileId) keepMine(entry.fileId, res.token);
           }).catch(function(){});
         });
       });
@@ -954,7 +981,13 @@
           throw new Error('chunk: blocked or offline');
         })
         .then(function(r){
-          if (r.status === 200 || r.status === 201 || r.status === 308) return r.status;
+          if (r.status === 200 || r.status === 201){
+            return r.json().then(function(said){
+              if (said && said.id) entry.fileId = said.id;
+              return r.status;
+            }, function(){ return r.status; });
+          }
+          if (r.status === 308) return r.status;
 
           if (r.status === 404 || r.status === 410){
             entry.session = null;
@@ -1031,6 +1064,7 @@
       .then(function(r){ return r.json(); })
       .then(function(res){
         if (!res || !res.ok) throw new Error((res && res.error) || 'refused');
+        if (res.id && res.token) keepMine(res.id, res.token);
         progress(id, 1);
       });
     }
@@ -1647,7 +1681,7 @@
       out.setAttribute('href', 'photos.html?from=' + encodeURIComponent(here));
     });
 
-    var backs = ['back-top', 'back-foot', 'mark-back'];
+    var backs = ['back-top', 'back-foot'];
     var any = false;
     for (var b = 0; b < backs.length; b++) if (document.getElementById(backs[b])) any = true;
     if (!any) return;
@@ -1896,6 +1930,7 @@
         a.target = '_blank';
         a.rel = 'noopener';
         a.title = (f.from ? f.from + ' \u00b7 ' : '') + (f.name || '');
+        a.setAttribute('data-id', f.id);
 
         var img = document.createElement('img');
         img.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(f.id) + '&sz=w480';
@@ -2000,6 +2035,243 @@
     });
 
     more.addEventListener('click', paint);
+
+    var shade, stage, shot, frame, who, drop, at = -1, armed = false;
+    var zoom = 1, tx = 0, ty = 0, touches = {}, gap0 = 0, zoom0 = 1,
+        mid0 = null, from0 = null, tapAt = 0, pan = null;
+
+    function build(){
+      if (shade) return;
+      shade = document.createElement('div');
+      shade.className = 'shade';
+      shade.hidden = true;
+      shade.innerHTML =
+        '<button type="button" class="shade-btn shade-x" aria-label="Close">&#215;</button>' +
+        '<button type="button" class="shade-btn shade-prev" aria-label="The one before">&#8249;</button>' +
+        '<button type="button" class="shade-btn shade-next" aria-label="The next one">&#8250;</button>' +
+        '<div class="shade-stage"><img class="shade-img" alt=""><iframe class="shade-frame" hidden allow="autoplay" title="A clip a guest sent"></iframe></div>' +
+        '<div class="shade-foot"><p class="shade-who"></p>' +
+        '<button type="button" class="shade-drop" hidden>Remove this</button></div>';
+      document.body.appendChild(shade);
+
+      stage = shade.querySelector('.shade-stage');
+      shot  = shade.querySelector('.shade-img');
+      frame = shade.querySelector('.shade-frame');
+      who   = shade.querySelector('.shade-who');
+      drop  = shade.querySelector('.shade-drop');
+
+      shade.querySelector('.shade-x').addEventListener('click', shut);
+      shade.querySelector('.shade-prev').addEventListener('click', function(){ step(-1); });
+      shade.querySelector('.shade-next').addEventListener('click', function(){ step(1); });
+      shade.addEventListener('click', function(ev){ if (ev.target === shade) shut(); });
+
+      drop.addEventListener('click', remove);
+      hold();
+    }
+
+    function place(){
+      if (!shot) return;
+      shot.style.transform = 'translate(' + tx + 'px,' + ty + 'px) scale(' + zoom + ')';
+      shot.classList.toggle('is-near', zoom > 1.02);
+    }
+
+    function rein(){
+      if (zoom <= 1){ tx = 0; ty = 0; return; }
+      var box = stage.getBoundingClientRect();
+      var room = shot.getBoundingClientRect();
+      var wide = Math.max(0, (room.width - box.width) / 2);
+      var tall = Math.max(0, (room.height - box.height) / 2);
+      tx = Math.max(-wide, Math.min(wide, tx));
+      ty = Math.max(-tall, Math.min(tall, ty));
+    }
+
+    function toward(point, want){
+      var box = stage.getBoundingClientRect();
+      var cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+      var px = (point.x - cx - tx) / zoom, py = (point.y - cy - ty) / zoom;
+      zoom = want;
+      tx = point.x - cx - px * zoom;
+      ty = point.y - cy - py * zoom;
+      rein(); place();
+    }
+
+    function hold(){
+      stage.addEventListener('pointerdown', function(ev){
+        if (frame && !frame.hidden) return;
+        stage.setPointerCapture(ev.pointerId);
+        touches[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+        var keys = Object.keys(touches);
+
+        if (keys.length === 2){
+          var a = touches[keys[0]], b = touches[keys[1]];
+          gap0 = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+          zoom0 = zoom;
+          mid0 = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          from0 = { tx: tx, ty: ty };
+          pan = null;
+          return;
+        }
+
+        var now = Date.now();
+        if (now - tapAt < 320){
+          tapAt = 0;
+          toward({ x: ev.clientX, y: ev.clientY }, zoom > 1.02 ? 1 : 2.6);
+          return;
+        }
+        tapAt = now;
+        pan = { x: ev.clientX, y: ev.clientY, tx: tx, ty: ty, at: now };
+      });
+
+      stage.addEventListener('pointermove', function(ev){
+        if (!touches[ev.pointerId]) return;
+        touches[ev.pointerId] = { x: ev.clientX, y: ev.clientY };
+        var keys = Object.keys(touches);
+
+        if (keys.length >= 2 && mid0){
+          var a = touches[keys[0]], b = touches[keys[1]];
+          var gap = Math.hypot(a.x - b.x, a.y - b.y) || 1;
+          var want = Math.max(1, Math.min(6, zoom0 * (gap / gap0)));
+          var box = stage.getBoundingClientRect();
+          var cx = box.left + box.width / 2, cy = box.top + box.height / 2;
+          var px = (mid0.x - cx - from0.tx) / zoom0, py = (mid0.y - cy - from0.ty) / zoom0;
+          var now2 = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+          zoom = want;
+          tx = now2.x - cx - px * zoom;
+          ty = now2.y - cy - py * zoom;
+          rein(); place();
+          return;
+        }
+
+        if (pan && zoom > 1.02){
+          tx = pan.tx + (ev.clientX - pan.x);
+          ty = pan.ty + (ev.clientY - pan.y);
+          rein(); place();
+        }
+      });
+
+      function lift(ev){
+        delete touches[ev.pointerId];
+        if (Object.keys(touches).length < 2){ mid0 = null; }
+
+        if (pan && zoom <= 1.02){
+          var dx = ev.clientX - pan.x, dy = ev.clientY - pan.y;
+          if (Date.now() - pan.at < 600 && Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)){
+            step(dx < 0 ? 1 : -1);
+          } else if (dy > 110 && Math.abs(dy) > Math.abs(dx)){
+            shut();
+          }
+        }
+        pan = null;
+      }
+
+      stage.addEventListener('pointerup', lift);
+      stage.addEventListener('pointercancel', function(ev){ delete touches[ev.pointerId]; pan = null; mid0 = null; });
+
+      stage.addEventListener('wheel', function(ev){
+        if (frame && !frame.hidden) return;
+        ev.preventDefault();
+        var want = Math.max(1, Math.min(6, zoom * (ev.deltaY < 0 ? 1.12 : 0.89)));
+        toward({ x: ev.clientX, y: ev.clientY }, want);
+      }, { passive: false });
+
+      document.addEventListener('keydown', function(ev){
+        if (!shade || shade.hidden) return;
+        if (ev.key === 'Escape') shut();
+        else if (ev.key === 'ArrowRight') step(1);
+        else if (ev.key === 'ArrowLeft') step(-1);
+      });
+    }
+
+    function open(i){
+      build();
+      var list = kept();
+      if (i < 0 || i >= list.length) return;
+
+      at = i;
+      var f = list[i];
+      zoom = 1; tx = 0; ty = 0;
+
+      if (f.video){
+        shot.hidden = true; shot.removeAttribute('src');
+        frame.hidden = false;
+        frame.src = 'https://drive.google.com/file/d/' + encodeURIComponent(f.id) + '/preview';
+      } else {
+        frame.hidden = true; frame.removeAttribute('src');
+        shot.hidden = false;
+        shot.src = 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(f.id) + '&sz=w1600';
+        shot.alt = f.from ? ('Shared by ' + f.from) : 'Shared by a guest';
+      }
+      place();
+
+      who.textContent = f.from || '';
+      armed = false;
+      drop.disabled = false;
+      drop.textContent = 'Remove this';
+      drop.hidden = !myShares()[f.id];
+
+      shade.hidden = false;
+      document.body.classList.add('is-held');
+    }
+
+    function shut(){
+      if (!shade) return;
+      shade.hidden = true;
+      if (frame){ frame.removeAttribute('src'); }
+      document.body.classList.remove('is-held');
+    }
+
+    function step(by){
+      var list = kept();
+      if (!list.length) return;
+      var next = at + by;
+      if (next < 0) next = list.length - 1;
+      if (next >= list.length) next = 0;
+      if (next >= shown) paint();
+      open(next);
+    }
+
+    function remove(){
+      var list = kept();
+      var f = list[at];
+      if (!f) return;
+
+      if (!armed){
+        armed = true;
+        drop.textContent = 'Tap again to remove';
+        return;
+      }
+
+      drop.disabled = true;
+      drop.textContent = 'Removing…';
+
+      fetch(RSVP_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'drop-photo', id: f.id, token: myShares()[f.id] || '' })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (!res || !res.ok) throw new Error('refused');
+        forgetMine(f.id);
+        shut();
+        show(all.filter(function(x){ return x.id !== f.id; }));
+      })
+      .catch(function(){
+        drop.disabled = false;
+        drop.textContent = 'Could not remove it';
+        armed = false;
+      });
+    }
+
+    grid.addEventListener('click', function(ev){
+      var a = ev.target.closest ? ev.target.closest('a[data-id]') : null;
+      if (!a) return;
+      var id = a.getAttribute('data-id');
+      var list = kept();
+      for (var i = 0; i < list.length; i++){
+        if (list[i].id === id){ ev.preventDefault(); open(i); return; }
+      }
+    });
 
     if (document.body.classList.contains('is-wall') || !('IntersectionObserver' in window)){
       load();
