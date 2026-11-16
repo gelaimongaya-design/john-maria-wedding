@@ -2258,3 +2258,26 @@ html.is-wide-phone #suite{ --sheet:100vw; }
   margin-top:-1px;
   background-color:var(--paper);
 }
+
+/* On a telephone the words of the menu are shown instead of the three lines,
+   the way the laptop shows them, but set larger and further apart so a
+   fingertip lands on the one it meant. They fall into rows under the mark. */
+html.is-wide-phone .nav-in{
+  flex-wrap:wrap; justify-content:center;
+  padding-block:.5rem; row-gap:.35rem; column-gap:2rem;
+  /* the bar is given the whole screen, not just the width of the paper */
+  width:100vw; max-width:none; margin-inline:calc((100vw - 100%) / -2);
+}
+html.is-wide-phone .nav-mark{
+  order:-1; flex:0 0 100%;
+  display:flex; justify-content:center; padding-block:.15rem;
+}
+html.is-wide-phone .nav-side{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  flex:0 0 100%; gap:.3rem 2.3rem;
+}
+html.is-wide-phone .nav-side a{
+  font-size:1.35rem; letter-spacing:.12em; padding:.45rem .25rem;
+}
+html.is-wide-phone .nav-burger{ display:none; }
+html.is-wide-phone .nav-menu{ display:none !important; }
