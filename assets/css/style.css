@@ -103,13 +103,28 @@ b, strong{ font-weight:700; }
 
 #overture{
   position:fixed; inset:0; z-index:90;
+
   display:grid; place-items:center;
-  background:#FFFFFF;
+  /* The woods are a film, and a film takes a moment to arrive. Behind it
+     lies a still of its first frame, so the envelope is never shown for an
+     instant against bare white. */
+  background:#17210F url(../img/forest-wide-first.jpg) center center / cover no-repeat;
   padding:clamp(16px,5vw,40px);
   padding-bottom:calc(clamp(16px,5vw,40px) + env(safe-area-inset-bottom,0px));
   overflow:hidden;
 }
 #overture.is-leaving{ pointer-events:none; }
+
+/* On a telephone the envelope is laid on the woods it is inviting people
+   to: a slow drift over the treetops, behind everything else on the page.
+   It is put there by hand once the page knows it is on a telephone, so a
+   laptop never asks for the film at all. */
+.env-woods{
+  position:absolute; inset:0; z-index:0;
+  width:100%; height:100%; object-fit:cover;
+  pointer-events:none;
+  background:#1d2a18;
+}
 
 #overture.is-fading{ opacity:0; transition:opacity .62s ease; }
 #overture.is-quick{ transition-duration:.26s; }
@@ -146,6 +161,13 @@ html.is-arriving{ overflow:hidden; }
 .env-sheet{ position:absolute; inset:0; z-index:2; }
 .env-body, .env-cut{ left:0; top:0; width:100%; }
 
+/* Her own cut of the calla lilies, kept at the size she drew them and set
+   so the stems finish level with the foot of the envelope, as in her film.
+   The envelope's own drawing no longer carries the flowers at all, so
+   nothing of the white paper they were cut from is left around them. */
+.env-lily{ z-index:5; left:59.68%; top:31.93%; width:42.49%; }
+.env-rose{ z-index:5; left:10.56%; top:26.51%; width:17.82%; }
+.env-body{ opacity:0; }
 .env-cut{ opacity:.004; }
 
 .env-cue{ left:37.204%; top:88.633%; width:16.634%; z-index:3; }
@@ -166,9 +188,13 @@ html.is-arriving{ overflow:hidden; }
                backface-visibility:hidden; }
 .flap-back{ transform:rotateX(180deg); }
 
+/* Their names are written on sooner and finish sooner, so the whole of
+   "John and Maria" is standing there to be read well before a finger
+   reaches the pearl; before, the hand was still writing when the
+   envelope was already being opened. */
 .env-sheet .env-script{
   clip-path:inset(0 100% 0 0);
-  animation:writeon 2.1s steps(19) .9s both;
+  animation:writeon 1.35s steps(19) .42s both;
 }
 @keyframes writeon{
   from{ clip-path:inset(0 100% 0 0); }
@@ -179,36 +205,127 @@ html.is-arriving{ overflow:hidden; }
   transform:rotateX(-104deg);
   transition:transform 1.25s cubic-bezier(.4,0,.62,1) .12s;
 }
+/* The flap carries her lace, so it stays in sight for the whole turn and
+   only leaves once it has finished turning and lies behind the lining. */
 #overture.is-open .env-flap{
-  opacity:0; transition:opacity .34s ease .62s;
+  opacity:0; transition:opacity .3s ease 1.08s;
 }
 
-#overture.is-open .env-sheet{ opacity:0; transition:opacity .22s ease .04s; }
+/* The flowers are not folded: they stand where they are drawn while the
+   flap turns back under them, and only then do they fade, into the
+   flowers of the open drawing. So the sheet itself is kept, the envelope
+   face and its writing leave, and the flowers hold and then go. */
+#overture.is-open .env-sheet{ opacity:1; }
+#overture.is-open .env-body{ opacity:0; transition:opacity .35s ease; }
+/* the names hold a moment after the tap and then go softly, rather than
+   being snatched away the instant the flap moves */
+#overture.is-open .env-cue{ opacity:0; transition:opacity .3s ease; }
+#overture.is-open .env-caps,
+#overture.is-open .env-script{ opacity:0; transition:opacity .52s ease .14s; }
+#overture.is-open .env-lily,
+#overture.is-open .env-rose{ animation:bloom-go 1.9s ease forwards; }
+/* the flowers stand as they are, then go; they never dip first */
+@keyframes bloom-go{
+  0%{ opacity:1; } 50%{ opacity:1; } 100%{ opacity:0; }
+}
 
 /* the picture carries a margin around the envelope so that the sprays keep
    their outermost petals, so it is laid a little wider than the envelope
    itself and pulled back up and to the left by that same margin */
-.env-wide, .env-pocket{
-  left:-3.05011%; top:-0.78125%; width:104.13943%; opacity:0;
+/* The envelope was drawn for a white page: what looks like its paper is the
+   page showing through, and only the lace, the flap and the flowers are
+   really there. Over the woods that reads as a hole, so the pocket is given
+   paper of its own, cut to the same mouth the letter rises out of. */
+.env-paper{ display:none; }
+
+/* The paper is the envelope itself, not the picture it was cut from: the
+   picture is laid wider than the envelope so the rose and the lilies keep
+   their outermost petals, and paper that wide reads as a white card lying
+   behind the whole thing. So it is given the envelope's own corners -- the
+   ones her lace hangs from, which is also where the letter is centred. */
+/* Shut, her envelope stands taller than the front of it that her open
+   drawing shows: the flap folds over the back, and the back is the taller
+   piece. So the paper of the envelope is given her own shut proportion,
+   1000 by 763, with its foot on the foot of the pocket; the pocket, the
+   lace and the letter all sit on it.
+
+   When it opens, the paper is cut back to the mouth, and what is above
+   the mouth is her open drawing instead: the lining and the turned flap. */
+.env-paper{
+  display:block; position:absolute; z-index:0;
+  left:19.62%; top:33.373cqw; width:60.52%; aspect-ratio:1000/763;
+  background:#FFFFFF;
 }
 
-.env-wide{
-  z-index:1;
-  clip-path:polygon(0 0, 100% 0, 100% 37.616%, 75.14% 37.616%, 50.653% 55.14%,
-                    26.551% 37.616%, 0 37.616%);
+/* Nothing of the paper is ever taken away: it ends at the mouth from the
+   first moment, and what lies above the mouth is the flap while the
+   envelope is shut and her lining once it is open. With nothing to time,
+   there is no moment when neither is there, and so no seam. */
+
+/* ------------------------------------------------------------------
+   The open envelope, and her flowers beside it.
+
+   She drew the open envelope on its own, with no flowers printed into
+   it, and each flower on its own as well. So the envelope is one layer
+   and the flowers are two more: the envelope may be laid at whatever
+   size the shut one needs, and the flowers keep the size she drew them
+   and simply fade, rather than being carried along.
+
+   The drawing is 1323 x 1651, its mouth lies across it at 42.7%, from
+   3.4% to 96.83%, and its point is at 50.4%, 67.2%. On a telephone the
+   mouth is given the width of the shut envelope's own mouth (80.45% of
+   the stage) and set where that mouth was; on a laptop it keeps the
+   width it had before.
+   ------------------------------------------------------------------ */
+/* Her open drawing is set so that the foot of its pocket lands on the foot
+   of the envelope's own paper: otherwise the paper runs on below her
+   drawing and the envelope shows a seam across its bottom. */
+.env-wide, .env-pocket{
+  left:13.877%; top:-4.95%; width:72.377%;
 }
+
+/* The lower half of her drawing is the envelope itself, and it is there
+   from the first moment: shut or open, it is the same envelope, and only
+   what happens above its mouth changes. */
+/* The front of the envelope -- the panel with the two folded edges meeting
+   in a V. It is the piece the letter slides behind, so it is kept in front
+   of everything: the letter goes into the envelope, not over it. */
 .env-pocket{
   z-index:3;
-  clip-path:polygon(0 37.616%, 26.551% 37.616%, 50.653% 55.14%, 75.14% 37.616%,
-                    100% 37.616%, 100% 100%, 0 100%);
+  clip-path:polygon(0 42.7%, 3.4% 42.7%, 50.4% 67.2%, 96.83% 42.7%,
+                    100% 42.7%, 100% 100%, 0 100%);
 }
 
-#overture.is-open .env-pocket{ opacity:1; transition:opacity .26s ease .24s; }
-#overture.is-open .env-wide{ opacity:1; transition:opacity .4s ease .40s; }
+/* The flap turned back, and the lining of the envelope behind the letter:
+   everything above the two folded edges of the front panel. It is not
+   faded in but uncovered, in step with the shut flap turning away, so the
+   paper the flap leaves behind is already lining and never a hole. */
+.env-wide{
+  z-index:1;
+  clip-path:polygon(0 42.7%, 100% 42.7%, 100% 42.7%, 96.83% 42.7%,
+                    50.4% 42.7%, 3.4% 42.7%, 0 42.7%);
+}
+
+/* Her open drawing carries no flowers of its own, so the two she cut out
+   are set beside it where she placed them: one over the left of the lace,
+   the bunch at the foot on the right. They arrive as the shut envelope's
+   lilies and rose go. */
+.env-bloom{ z-index:5; opacity:0; pointer-events:none; }
+.env-bloom-b{ left:10.90%; top:26.61%; width:21.14%; }
+.env-bloom-a{ left:64.94%; top:63.40%; width:30.86%; }
+#overture.is-open .env-bloom{ opacity:1; transition:opacity .6s ease .5s; }
+
+#overture.is-open .env-wide{
+  clip-path:polygon(0 0, 100% 0, 100% 42.7%, 96.83% 42.7%, 50.4% 67.2%,
+                    3.4% 42.7%, 0 42.7%);
+  transition:clip-path 1.25s cubic-bezier(.4,0,.62,1) .12s;
+}
 
 .card-slot{
   position:absolute; z-index:2;
-  left:0; right:0; top:-600%; bottom:6%;
+  /* the slot ends where the envelope ends, so the letter is never seen
+     below it: it comes up out of the pocket, not in from beside it */
+  left:0; right:0; top:-600%; bottom:14.84%;
   overflow:hidden; pointer-events:none;
 
   opacity:0; transition:opacity 0s linear 1.05s;
@@ -550,7 +667,12 @@ body{ background:var(--grey); }
 .verse-num{ width:min(18%,96px); }
 .verse-line{ width:min(94%,620px); }
 
-@media (min-width:52em){
+/* The verse is laid out piece by piece only where there is room for it:
+   on a laptop, where her own drawing of the page is shown instead. In
+   between -- a tablet held upright, or a window not opened full -- those
+   places overlapped, the big script falling across the photograph, so
+   there the four pieces simply stand one under the other. */
+@media (min-width:60em){
   .verse{
     position:relative; width:100%; aspect-ratio:1366/768;
     padding-block:0; display:block;
@@ -652,6 +774,11 @@ body{ background:var(--grey); }
 
 .prelude-in{
   position:absolute; inset:0;
+  /* Her lettering and the counting lie right across the photograph, and
+     being laid over it they were swallowing the tap meant for the picture
+     itself. Nothing in here is to be pressed, so taps pass straight
+     through to the photograph beneath. */
+  pointer-events:none;
   display:grid; align-content:space-between; justify-items:center;
   padding-block:clamp(1.2rem,5vw,3.4rem) clamp(1rem,4.4vw,3rem);
 }
@@ -985,7 +1112,8 @@ body{ background:var(--grey); }
 }
 
 .scr-gift{ width:min(86%,420px); }
-@media (min-width:52em){
+/* set off to one side only where her own drawing of the page is shown */
+@media (min-width:60em){
   .scr-gift{ width:64.3%; justify-self:start; margin-left:24.1%; }
 }
 .gift-text{ text-align:center; display:grid; justify-items:center; gap:1.3rem; max-width:26rem; }
@@ -997,7 +1125,10 @@ body{ background:var(--grey); }
 .taped-g1 .tape, .taped-g2 .tape{ width:55%; }
 .taped-g1, .taped-g2{ width:min(58%,260px); }
 
-@media (min-width:52em){
+/* The two taped photographs are pinned to the corners of her page only
+   where that page is her drawing. In between they fell across the asking
+   itself, so there they stay in the column with everything else. */
+@media (min-width:60em){
   .pg-gift{ position:relative; }
 
   .taped-g1{ position:absolute; left:4.9%;  top:18.7%; width:20.3%; }
@@ -1155,7 +1286,8 @@ body{ background:var(--grey); }
 }
 .end-c a{ color:inherit; text-decoration:none; }
 .end-c a:hover{ text-decoration:underline; }
-.ic{ opacity:.8; justify-self:center; }
+.ic{ opacity:.85; justify-self:center; display:inline-flex; align-items:center; }
+.ic svg{ width:1em; height:1em; display:block; }
 
 .end-mark{ width:clamp(84px,11vw,120px); justify-self:start; filter:invert(1); }
 
@@ -1241,6 +1373,7 @@ body{ background:var(--grey); }
 
 .canva{ display:none; }
 .ov{ display:none; }
+.ov-rib{ display:none; }
 
 .live{ display:contents; }
 
@@ -1250,7 +1383,7 @@ body{ background:var(--grey); }
     position:relative; padding:0; overflow:hidden; gap:0;
     container-type:inline-size;
   }
-  .has-canva > .canva{
+  .has-canva .canva{
     display:block; width:100%; height:auto; margin:0;
   }
 
@@ -1262,10 +1395,10 @@ body{ background:var(--grey); }
   .has-canva > .ov{ display:block; position:absolute; margin:0; z-index:4; }
 
   .has-canva.cv-inset{ aspect-ratio:1070/601; }
-  .has-canva.cv-inset > .canva{ position:absolute; }
+  .has-canva.cv-inset .canva{ position:absolute; }
 
-  .has-canva.cv-inset > .cv-wed{ left:8.00%; top:8.04%; width:44.50%; }
-  .has-canva.cv-inset > .cv-faq{ left:3.00%; top:0;     width:91.00%; }
+  .has-canva.cv-inset .cv-wed{ left:8.00%; top:8.04%; width:44.50%; }
+  .has-canva.cv-inset .cv-faq{ left:3.00%; top:0;     width:91.00%; }
 
   .ov-det{ left:58.88%; top:1.5%; width:38.57%; aspect-ratio:408/578; }
   .ov-maps{ left:0; right:0; top:75.37%; height:5.35%; width:auto; }
@@ -1431,7 +1564,7 @@ br.hold{ display:none; }
 
 @media (min-width:60em){
 
-  .has-canva.cv-inset > .cv-letter{ left:-2.857%; top:-0.424%; width:109.286%; }
+  .has-canva.cv-inset .cv-letter{ left:-2.857%; top:-0.424%; width:109.286%; }
 }
 
 @media (min-width:60em){
@@ -1465,7 +1598,7 @@ br.hold{ display:none; }
 }
 
 @media (min-width:60em){
-  .has-canva.cv-inset > .cv-faq{ left:2.857%; top:0; width:92.800%; }
+  .has-canva.cv-inset .cv-faq{ left:2.857%; top:0; width:92.800%; }
 }
 
 @media (min-width:60em){
@@ -1773,11 +1906,12 @@ br.hold{ display:none; }
   .end-mark{ position:absolute; left:88.3%; top:14.3%; width:7.2%; height:auto; justify-self:auto; }
 }
 
+/* her writing, at the size she set it against the envelope */
 .env-sheet .env-caps{
-  left:32.398%; top:29.325%; width:23.791%; z-index:4;
+  left:30.019%; top:29.325%; width:28.548%; z-index:4;
 }
 .env-sheet .env-script{
-  left:32.398%; top:33.608%; width:25.048%; z-index:4;
+  left:29.393%; top:34.100%; width:30.058%; z-index:4;
 }
 
 .pearl-ring{
@@ -1810,12 +1944,17 @@ br.hold{ display:none; }
   #overture.is-open .env-card{ transform:translateY(-46.3cqw); }
 }
 
-.env-card{ left:22.75%; width:51.9%; bottom:-44.0cqw; }
-#overture.is-open .env-card{ transform:translateY(-47.0cqw); }
+/* The letter is cut to a size the envelope could really hold: narrower
+   than its mouth and shorter than its body. It waits with its head under
+   the mouth and rises until a little under half of it is showing, its foot
+   still inside the pocket -- it comes out of the envelope rather than
+   standing beside it. */
+.env-card{ left:21.53%; width:56.7%; bottom:-50.8cqw; }
+#overture.is-open .env-card{ transform:translateY(-37cqw); }
 
 @media (max-width:48em){
-  .env-card{ left:22.75%; width:51.9%; bottom:-44.0cqw; }
-  #overture.is-open .env-card{ transform:translateY(-47.0cqw); }
+  .env-card{ left:21.53%; width:56.7%; bottom:-50.8cqw; }
+  #overture.is-open .env-card{ transform:translateY(-37cqw); }
 }
 
 .pearl-ring{ border-width:1px; border-color:rgba(74,66,50,.75); }
@@ -2332,9 +2471,749 @@ html.is-wide-phone body{ background:var(--night); }
 
 /* While the letter is still growing it does not yet reach the top of the
    screen, and the dark behind the paper showed above it as a black band.
-   For as long as the letter is on its way, what lies behind it is paper. */
-html.is-wide-phone.is-arriving body{ background:var(--paper); }
+   For as long as the letter is on its way, what lies behind it is the grey
+   of the lace she drew down the letter's own border, rather than white:
+   against white the paper had no edge at all. */
+html.is-wide-phone.is-arriving body{ background:var(--grey); }
 
 /* On the photographs page the asking above the box is centred, so what is
    typed in the box is centred too, at every width. */
 body.is-wall .share .field{ text-align:center; }
+
+
+/* ------------------------------------------------------------------
+   The telephone pages.
+
+   A telephone is given the laptop's width and shrunk to fit, so every
+   rule written for a wide screen reaches it. These are the pages drawn
+   for the telephone itself: one column, held in the hand, with the
+   pieces where they were drawn to be.
+   ------------------------------------------------------------------ */
+
+/* the invitation photograph fills the glass, the way it was drawn */
+html.is-wide-phone .pg-land{
+  aspect-ratio:auto;
+  min-height:calc(100svh - var(--nav-real, 154px));
+}
+/* She keeps John at the left edge of the photograph, so the window on it is
+   moved over to hold him; and the writing over it is given one close shadow
+   instead of two wide ones, which were softening the letters. */
+html.is-wide-phone .pg-land > picture{
+  display:block; position:absolute; inset:0;
+}
+html.is-wide-phone .land-shot{ object-position:50% 50%; }
+html.is-wide-phone .land-scr{
+  filter:drop-shadow(0 1px 2px rgba(18,24,14,.5));
+}
+html.is-wide-phone .land-scr{ left:5%; top:10.5%; width:90%; }
+html.is-wide-phone .land-when,
+html.is-wide-phone .land-where{ bottom:3.2%; font-size:2.5vw; font-weight:700; }
+html.is-wide-phone .land-when{ left:4%; }
+html.is-wide-phone .land-where{ right:4%; }
+
+/* her telephone drawings stand in for the laptop ones, page by page */
+
+html.is-wide-phone .pg-letter.cv-inset{  aspect-ratio:2148/3416; }
+html.is-wide-phone .pg-details.cv-inset{ aspect-ratio:2024/3248; }
+html.is-wide-phone .pg-faq.cv-inset{     aspect-ratio:1664/2910; }
+
+/* the drawings reach the two edges of the glass, the way they were made */
+html.is-wide-phone .has-canva.cv-inset .canva{
+  left:0; top:0; width:100%; height:100%; object-fit:cover;
+}
+
+/* the wrapper that lets a telephone pick its own drawing must not take up
+   room of its own */
+.has-canva > picture{ display:block; }
+/* Her sheet of notes is given the shape of her drawing plus the breath of
+   paper set above it; shaped to the drawing alone, the page came out that
+   breath too short and cut the last line -- "black and/or white." -- in
+   half along the bottom. (0.035 of the sheet is 61 parts of her drawing's
+   1745 across.) */
+html.is-wide-phone .note-page{ aspect-ratio:1745/3268; }
+
+/* the living pieces move to where she drew them on the telephone page */
+html.is-wide-phone .ov-maps{ top:46.4%; height:3.2%; }
+html.is-wide-phone .ov-maps .mapbtn{ width:14%; font-size:1.7cqw; }
+html.is-wide-phone .ov-maps .mapbtn:first-child{ left:28%; }
+html.is-wide-phone .ov-maps .mapbtn:last-child{  left:57%; width:13%; }
+
+
+
+/* Her telephone drawings already carry the photographs, the tape and the
+   script, so the loose pieces that are laid over the laptop drawing are
+   taken away. What stays is only what has to be alive: the two map buttons,
+   which are made see-through and left sitting exactly on the drawn ones so
+   a thumb still finds them, and the code, which is kept as a real picture
+   so a camera can read it. */
+html.is-wide-phone .ov-det,
+html.is-wide-phone .ov-story,
+html.is-wide-phone .ov-g1,
+html.is-wide-phone .ov-g2,
+html.is-wide-phone .ov-verse,
+html.is-wide-phone .ov-song{ display:none; }
+
+html.is-wide-phone .ov-maps .mapbtn{
+  border-color:transparent; background:transparent; box-shadow:none;
+  color:transparent;
+}
+
+html.is-wide-phone .ov-qr{ left:30%; top:39%; width:36%; aspect-ratio:1/1; }
+
+/* The timeline, the sharing page and the reply card were laid out sideways
+   for a laptop. On a telephone they go back to the single column they were
+   first written as, which is how she drew them. */
+html.is-wide-phone .time-in{
+  position:static; display:grid; gap:clamp(2.2rem,6vw,3rem);
+  aspect-ratio:auto; container-type:normal;
+  padding:clamp(3rem,8vw,4.5rem) max(var(--gut), 8%);
+}
+html.is-wide-phone .time-left{
+  position:static; display:grid; justify-items:center;
+  width:min(100%,30rem); margin-inline:auto;
+}
+html.is-wide-phone .scr-time{
+  position:static; width:87%; margin:0 0 clamp(1.5rem,4.4vw,2.6rem);
+}
+html.is-wide-phone .time-list{ position:static; width:100%; margin:0; }
+html.is-wide-phone .time-row{
+  grid-template-columns:45% 1fr; padding-block:.78em;
+  font-size:clamp(.9rem,.62rem + .72vw,1.4rem);
+}
+html.is-wide-phone .taped-d{
+  position:static; width:min(74%,320px); margin:0 auto; padding:1.64%;
+}
+
+html.is-wide-phone .pv-in{
+  position:static; display:grid; gap:clamp(2rem,5vw,3rem);
+  align-items:center; min-height:0; container-type:normal;
+  max-width:1180px; margin-inline:auto; padding:clamp(3rem,8vw,4.5rem) var(--gut);
+}
+html.is-wide-phone .pv-scr{ position:static; justify-self:center; width:min(86%,360px); margin:0; }
+html.is-wide-phone .pv-text{ display:grid; justify-items:center; margin:0; width:auto; padding:0; gap:1.1rem; }
+html.is-wide-phone .pv-text{ gap:clamp(1.4rem,4vw,2.2rem); }
+html.is-wide-phone .pv-text .pv-lede,
+html.is-wide-phone .pv-text .pv-ask{
+  max-width:84%; font-size:3.2vw; line-height:1.5; text-align:center;
+}
+html.is-wide-phone .pv-text .pv-lede + .pv-lede{ margin-top:0; }
+html.is-wide-phone .pv-qr{ width:auto; margin:0; padding:3%; border-radius:2px; }
+html.is-wide-phone .pv-qr canvas{ width:min(42vw,300px); height:min(42vw,300px); }
+html.is-wide-phone .pv-scr{ width:min(72%,460px); }
+html.is-wide-phone .pv-link .cta{ height:auto; font-size:2.4vw; padding:.85em 2em; }
+html.is-wide-phone .share{ width:min(100%,32rem); margin:0; gap:.9rem; }
+
+/* the reply card is drawn on black, the way she set it */
+html.is-wide-phone .pg-rsvp{ background:var(--night); color:#F2F1EC; }
+html.is-wide-phone .pg-rsvp .rsvp-lede,
+html.is-wide-phone .pg-rsvp .field-label,
+html.is-wide-phone .pg-rsvp .party-h{ color:#DEDDD6; }
+html.is-wide-phone .pg-rsvp .hint{ color:#A9A8A1; }
+html.is-wide-phone .pg-rsvp .cta{ background:#fff; color:#111; border-color:#fff; }
+html.is-wide-phone .pg-rsvp .text-cta{ color:#CFCEC7; }
+html.is-wide-phone .pg-rsvp :focus-visible{ outline-color:#fff; }
+html.is-wide-phone .time-in{ grid-template-columns:1fr; align-items:stretch; }
+html.is-wide-phone .time-left{ margin-inline:auto; }
+html.is-wide-phone .taped-d{ margin-inline:auto; }
+html.is-wide-phone .pv-in{ grid-template-columns:1fr; }
+
+/* the reply heading is drawn in dark ink for a pale page; on the black card
+   it is turned about so it reads white, the way she drew it */
+html.is-wide-phone .scr-rsvp{ filter:invert(1); }
+
+/* Before the love story she now sets a ribbon rather than the string of
+   pearls, laid right across the paper. */
+html.is-wide-phone .seam-pearls{
+  height:calc(var(--sheet) * 0.21);
+  background:var(--paper);
+  z-index:6; overflow:visible;
+}
+html.is-wide-phone .seam-pearls::after{
+  content:""; display:block; position:absolute;
+  left:0; right:0; top:calc(var(--sheet) * -0.069); width:auto;
+  height:calc(var(--sheet) * 0.3712);
+  background:url(../img/ph-rib-story.png?v=1) no-repeat center top/92% auto;
+  pointer-events:none;
+}
+
+/* The second run of pearls, which the laptop sets before the verse, has no
+   place in her telephone pages: there the gift page runs straight on. */
+html.is-wide-phone .seam-pearls.on-verse{ display:none; }
+
+/* The ribbon she drew coming down into the prelude, crossing from the white
+   page above onto the photograph. It is lifted off her sheet so the
+   photograph shows through around it. */
+html.is-wide-phone .prelude{ overflow:hidden; }
+html.is-wide-phone .prelude::after{
+  content:""; position:absolute; z-index:2; pointer-events:none;
+  left:0; top:0; width:40%; aspect-ratio:1300/635;
+  background:url(../img/ph-rib-pre.png?v=2) no-repeat left top/100% auto;
+}
+/* and the writing sits where she set it, clear of the ribbon's tail */
+html.is-wide-phone .prelude-t{
+  left:33%; top:9%; width:63%; z-index:3;
+  /* two wide shadows were hazing the thin strokes; one close one is enough */
+  filter:drop-shadow(0 1px 3px rgba(20,20,18,.55));
+}
+/* The counting sits low on her page and a little right of the middle, and
+   is set larger than the laptop sets it. */
+html.is-wide-phone .prelude .count{ top:61.5%; padding-left:20%; z-index:3; }
+html.is-wide-phone .prelude .fd,
+html.is-wide-phone .prelude .count-sep{ font-size:6.4cqw; }
+
+/* Her counting is set plainly: the four numbers and the colons between them,
+   with no words under them. */
+html.is-wide-phone .prelude .count-l{ display:none; }
+html.is-wide-phone .prelude .count-unit{ gap:0; }
+
+/* The ribbon that lies under the questions, where she put it, with the lace
+   cut that leads into the black reply card following it. */
+.seam-ribbon{ display:none; }
+html.is-wide-phone .seam-ribbon{
+  display:block; position:relative; width:100%;
+  height:calc(var(--sheet) * 0.302);
+  background:var(--paper) url(../img/ph-rib-faq.png?v=1) no-repeat left -4% top/93% auto;
+}
+
+/* The questions and the verse are drawn with a hand's breadth of paper
+   either side of them. Her exports are trimmed to the writing itself, so
+   that breath is given back here. */
+html.is-wide-phone .pg-faq.cv-inset{ aspect-ratio:980/1337; background:var(--paper); }
+html.is-wide-phone .pg-faq.cv-inset .canva{
+  left:11%; width:78%; top:0; height:100%; object-fit:contain;
+}
+html.is-wide-phone .pg-verse{
+  background:var(--paper);
+  /* she leaves a breath of paper under the photograph before the lace */
+  padding-bottom:calc(var(--sheet) * 0.09);
+}
+html.is-wide-phone .pg-verse .canva{
+  display:block; width:90%; margin-inline:auto; height:auto;
+}
+
+/* Between her telephone pages she set a plain breath of paper, not the rule
+   and the pressed flower the laptop puts there. The band is the height she
+   drew it, read off her own separator. */
+html.is-wide-phone .seam-mark:not(.seam-pearls):not(.on-rsvp){ display:none; }
+html.is-wide-phone .seam-mark::before,
+html.is-wide-phone .seam-mark:not(.seam-pearls)::after{ content:none; }
+
+/* The one before the black reply card keeps the lace, the way she drew the
+   paper cut away above a dark page. */
+html.is-wide-phone .seam-mark.on-rsvp{
+  height:max(30px, calc(var(--sheet) * 0.046));
+  background-image:url(../img/sep-lace.png);
+  background-position:center bottom; background-size:auto 100%;
+  background-repeat:repeat-x;
+}
+
+/* Where she wants two pages to touch, the band between them goes: the gold
+   that opens the entourage sits straight on the black of the timeline, and
+   the gift page follows the black sharing page with nothing between. */
+html.is-wide-phone .seam-euca,
+html.is-wide-phone .seam-daisy{ display:none; }
+
+/* The gold that opens the entourage is printed into her page drawing, and
+   at the size a telephone shows that drawing it goes soft. Her own gold
+   band, which is four times the size, is laid straight over it. */
+html.is-wide-phone .pg-ent{ position:relative; }
+html.is-wide-phone .pg-ent::before{
+  content:""; position:absolute; z-index:2; left:0; right:0; top:0;
+  height:calc(var(--sheet) * 0.0953);
+  background:url(../img/ph-gold.png?v=2) no-repeat center top/112% auto;
+  pointer-events:none;
+}
+/* Her page drawing carried its own gold, which went soft at this size; that
+   band is cut off the drawing and her own, four times the size, is laid
+   across the top, with the page starting clear below it. */
+html.is-wide-phone .pg-ent{ padding-top:calc(var(--sheet) * 0.139); background-color:#FFFFFF; background-image:none; }
+
+/* The top edge of these three pages is faded away on a laptop, to soften the
+   join. On a telephone that fade ate the top of the gold band and left a
+   white hair above it, where she wants the gold sitting on the black. */
+html.is-wide-phone .pg-story,
+html.is-wide-phone .pg-ent,
+html.is-wide-phone .pg-verse{
+  -webkit-mask-image:none; mask-image:none;
+}
+
+/* ------------------------------------------------------------------
+   Her lace.
+
+   Where one of her pages gives way to the next, the paper is cut in a
+   scalloped eyelet and the page below shows through the holes. The lace is
+   taken off her own sheet and hung over the top of whatever follows, so
+   what shows through is the real page and not a patch of white.
+   ------------------------------------------------------------------ */
+html.is-wide-phone .lace-cut::after{
+  content:""; position:absolute; left:0; right:0; z-index:4;
+  height:calc(var(--sheet) * 0.029);
+  background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  pointer-events:none;
+}
+
+/* After the last line of the love story she leaves a breath of paper, and
+   the lace hangs from it over the photograph that follows. */
+.seam-aft-story{ display:none; }
+html.is-wide-phone .seam-aft-story{
+  display:block; position:relative; z-index:6; width:100%;
+  height:calc(var(--sheet) * 0.052);
+  background:var(--paper);
+}
+html.is-wide-phone .seam-aft-story::after{
+  content:""; position:absolute; left:0; right:0; top:100%; z-index:4;
+  height:calc(var(--sheet) * 0.029);
+  background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  pointer-events:none;
+}
+
+/* The same cut above the black sharing page and above the black reply
+   card, in place of the single wide arch the laptop uses there. */
+html.is-wide-phone .seam-arch{ height:0; }
+html.is-wide-phone .seam-arch::after{
+  top:0; height:calc(var(--sheet) * 0.029);
+  background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  -webkit-mask-image:none; mask-image:none;
+}
+html.is-wide-phone .seam-arch.on-ent{ height:0; }
+html.is-wide-phone .seam-arch.on-ent::after{
+  top:0; height:calc(var(--sheet) * 0.029);
+  background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  -webkit-mask-image:none; mask-image:none;
+}
+html.is-wide-phone .seam-mark.on-rsvp{
+  height:0; overflow:visible; background:none; z-index:6;
+}
+html.is-wide-phone .seam-mark.on-rsvp::after{
+  content:""; position:absolute; left:0; right:0; top:0; width:auto; z-index:4;
+  height:calc(var(--sheet) * 0.029);
+  background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  pointer-events:none;
+}
+
+/* The photograph of the road is set taller on her page than the wide band
+   the laptop gives it, so the two of them read larger. */
+html.is-wide-phone #details{ aspect-ratio:442/385; overflow:hidden; }
+html.is-wide-phone #details img{
+  width:100%; height:100%; object-fit:cover; object-position:50% 50%;
+}
+
+/* The love story is drawn with paper either side of the writing; her export
+   is trimmed to the writing itself, so that breath is given back. */
+html.is-wide-phone .pg-story{ background:var(--paper); }
+html.is-wide-phone .pg-story .canva{
+  display:block; width:81.5%; margin-inline:auto; height:auto;
+}
+
+/* ------------------------------------------------------------------
+   The three photographs.
+
+   The laptop stands them side by side across the page. She sets them one
+   under the other on a telephone, each a little off centre, with a ribbon
+   falling behind them down the left.
+   ------------------------------------------------------------------ */
+html.is-wide-phone .pg-trio{
+  position:relative; aspect-ratio:1500/2836; overflow:hidden;
+  /* Her export leaves a hair of white at the left where the ribbon's tail
+     was trimmed; the page is drawn a touch wider so the tail runs off the
+     edge, the way she set it. */
+  background:var(--paper) url(../img/ph-trio.jpg?v=2) no-repeat center top/104% auto;
+}
+/* She drew this page whole, photographs and ribbon together, so the loose
+   pieces the laptop arranges are put away and her page stands in their place. */
+html.is-wide-phone .pg-trio figure{ display:none; }
+
+/* The timeline, set the size she drew it: the hours reaching nearly across
+   the page, and the photograph of the tables large under them, taped at its
+   corner. The tape that sat above the black page is the one she took out. */
+html.is-wide-phone .taped-d{
+  position:relative; left:auto; top:auto; transform:none;
+  width:min(74%, 560px); margin-inline:auto; padding:2.4%;
+  background:#fff; box-shadow:0 1px 10px rgba(0,0,0,.35);
+}
+html.is-wide-phone .taped-d .tape{
+  left:40%; right:auto; width:32%; transform:translateY(-46%) rotate(-7deg);
+}
+html.is-wide-phone .time-in{
+  padding:clamp(3.4rem,10vw,6rem) 12% clamp(3.6rem,11vw,6.5rem);
+  gap:clamp(2.6rem,8vw,4rem);
+}
+html.is-wide-phone .time-left{ width:100%; max-width:none; }
+html.is-wide-phone .scr-time{ width:58%; margin-bottom:clamp(2.4rem,7vw,4rem); }
+html.is-wide-phone .time-list{ width:100%; margin-inline:auto; }
+/* A telephone is given the page at the width of a laptop and then shrinks
+   the whole of it to fit the glass, so a size set in rem lands on the eye
+   much smaller than it is written. Everything that has to be read on these
+   pages is therefore set as a share of the width, which shrinks with it. */
+html.is-wide-phone .time-row{
+  grid-template-columns:45% 1fr; padding-block:1.05em;
+  font-size:2.6vw;
+}
+
+/* ------------------------------------------------------------------
+   The order of the last pages.
+
+   She puts the questions before the verse from the Song of Solomon, where
+   the laptop has them the other way about. The pages are left where they
+   are in the page itself and only their order on the screen is changed,
+   so the laptop keeps the run she already settled.
+   ------------------------------------------------------------------ */
+html.is-wide-phone .leaf{ display:flex; flex-direction:column; }
+html.is-wide-phone .leaf > *{ order:0; }
+html.is-wide-phone .leaf > .pg-verse{ order:1; }
+html.is-wide-phone .leaf > .seam-mark.on-rsvp{ order:2; }
+html.is-wide-phone .leaf > .pg-rsvp{ order:3; }
+html.is-wide-phone .leaf > .pg-end{ order:4; }
+
+/* The closing page goes back to the plain run she drew: the photograph
+   across the glass, and under it the black band with the names. */
+html.is-wide-phone .pg-end{
+  position:static; aspect-ratio:auto; overflow:visible;
+}
+html.is-wide-phone .pg-end > picture{ display:block; }
+html.is-wide-phone .end-shot{
+  position:static; width:100%; height:auto; aspect-ratio:1800/1011;
+  object-fit:cover; object-position:50% 50%;
+}
+
+/* The reply card is set at the size she drew it, the asking large enough to
+   read at arm's length. */
+/* The reply card is set out the way she drew it: the asking across the
+   page, then three rows with the labels ending a third of the way over and
+   the boxes running on to just short of the right edge. */
+html.is-wide-phone .pg-rsvp{ padding:5.5vw 0 7vw; }
+html.is-wide-phone .scr-rsvp{ width:34.5%; margin-left:35%; justify-self:start; }
+html.is-wide-phone .rsvp-lede{
+  font-size:2.45vw; line-height:1.55; margin-top:2.6vw;
+  padding-inline:13%; max-width:none; width:100%;
+  /* the laptop evens the two lines out; she breaks hers after "reply is",
+     so on a telephone the line is allowed to run full before it turns */
+  text-wrap:wrap;
+}
+html.is-wide-phone .rsvp-find{ margin-top:3.2vw; gap:2.8vw; }
+html.is-wide-phone .rsvp-find .row{
+  grid-template-columns:auto auto; justify-content:center; column-gap:2.5%;
+}
+html.is-wide-phone .rsvp-find .search{ width:42vw; }
+html.is-wide-phone .row,
+html.is-wide-phone .rsvp-party{
+  grid-template-columns:33% 52.5%; column-gap:2%;
+}
+html.is-wide-phone .rsvp-party{ row-gap:3vw; margin-top:3vw; }
+html.is-wide-phone .rsvp-find .cta{ justify-self:center; margin-left:0; }
+html.is-wide-phone .field-label,
+html.is-wide-phone .rsvp-party .party-h,
+html.is-wide-phone .rsvp-party .seats{ font-size:2.3vw; }
+html.is-wide-phone .search{ height:4.4vw; border-radius:6px; }
+html.is-wide-phone .search .field{ font-size:2.25vw; }
+html.is-wide-phone .search-i{ width:2.1vw; height:2.1vw; }
+html.is-wide-phone .search-x{ font-size:2.8vw; }
+html.is-wide-phone .pad{ min-height:12vw; border-radius:2.2vw; padding:1.6vw 2.2vw; font-size:2.25vw; }
+html.is-wide-phone .pg-rsvp .cta{ font-size:1.75vw; height:auto; padding:.9em 1.8em; }
+html.is-wide-phone .pg-rsvp .hint,
+html.is-wide-phone .pg-rsvp .text-cta{ font-size:1.8vw; }
+html.is-wide-phone .guests{ gap:2.2vw; font-size:2.2vw; }
+/* The three columns are set where she measured them: the words at the left
+   edge, the first name a good third across, the second two thirds. */
+html.is-wide-phone .end-bar{
+  position:static; display:grid; grid-template-columns:36.2% 37.4% 1fr;
+  align-items:center; column-gap:0; row-gap:1vw;
+  padding:4.4vw 5%;
+}
+/* The grid column this sits in takes its width from the picture, so a width
+   given as a share of that column would chase its own tail. It is set
+   against the width of the glass instead, at the size she drew it. */
+html.is-wide-phone .end-t{
+  position:static; width:17.5vw; height:auto; justify-self:start;
+}
+html.is-wide-phone .end-who{ position:static; width:auto; top:auto; left:auto; }
+html.is-wide-phone .end-who p{ margin:0 0 .5vw; }
+html.is-wide-phone .end-n{ font-size:2.2vw; font-weight:700; }
+html.is-wide-phone .end-c{ font-size:1.95vw; }
+html.is-wide-phone .end-mark{ display:none; }
+
+/* ------------------------------------------------------------------
+   Seeing a photograph properly.
+   ------------------------------------------------------------------ */
+.can-look{ cursor:zoom-in; }
+.can-look:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+body.is-looking{ overflow:hidden; }
+
+.look{
+  position:fixed; inset:0; z-index:200;
+  background:#0B0B0A;
+  display:none; place-items:center;
+  opacity:0; transition:opacity .22s ease;
+}
+.look.is-on{ display:grid; opacity:1; }
+
+.look-frame{
+  position:relative; width:100%; height:100%;
+  overflow:hidden;
+  touch-action:none;
+}
+/* the one before, the one in hand, the one after: a rail three frames
+   wide that carries the finger's own movement */
+.look-rail{
+  position:absolute; top:0; left:0; height:100%; width:300%;
+  display:flex; will-change:transform;
+}
+.look-pane{
+  flex:0 0 33.33333%; height:100%;
+  display:grid; place-items:center;
+}
+.look-pic{
+  max-width:96%; max-height:92%;
+  width:auto; height:auto; display:block;
+  transform-origin:50% 50%;
+  will-change:transform;
+  user-select:none; -webkit-user-drag:none;
+}
+.look.is-near .look-pic{ cursor:grab; }
+
+.look-x, .look-go{
+  position:absolute; z-index:2;
+  border:0; background:rgba(255,255,255,.1); color:#fff;
+  display:grid; place-items:center; cursor:pointer;
+  border-radius:50%; backdrop-filter:blur(6px);
+  transition:background .18s ease;
+}
+.look-x:hover, .look-go:hover{ background:rgba(255,255,255,.2); }
+.look-x{ top:max(14px, env(safe-area-inset-top)); right:14px; width:44px; height:44px; font-size:1.7rem; line-height:1; }
+.look-go{ top:50%; margin-top:-26px; width:52px; height:52px; font-size:2rem; line-height:1; }
+.look-prev{ left:12px; }
+.look-next{ right:12px; }
+
+.look-n{
+  position:absolute; left:0; right:0; bottom:max(14px, env(safe-area-inset-bottom));
+  margin:0; text-align:center; color:rgba(255,255,255,.72);
+  font-family:var(--deck); font-size:.82rem; letter-spacing:.14em;
+}
+
+/* On a telephone the page is drawn at the width of a laptop and shrunk,
+   so anything meant for a fingertip has to be written larger to land the
+   same size on the glass. */
+html.is-wide-phone .look-x{ width:9vw; height:9vw; font-size:5vw; top:3vw; right:3vw; }
+html.is-wide-phone .look-go{ width:10vw; height:10vw; margin-top:-5vw; font-size:5.4vw; }
+html.is-wide-phone .look-n{ font-size:2.2vw; bottom:3vw; }
+
+/* The three photographs on her telephone page are printed into the page,
+   so a place to tap is laid over each of them. */
+.trio-taps{ display:none; }
+html.is-wide-phone .trio-taps{ display:block; }
+html.is-wide-phone .trio-tap{
+  position:absolute; z-index:3; padding:0; border:0;
+  background:transparent; cursor:zoom-in; -webkit-tap-highlight-color:transparent;
+}
+html.is-wide-phone .trio-tap:focus-visible{ outline:2px solid #4a4232; outline-offset:2px; }
+html.is-wide-phone .trio-tap.t1{ left:31.6%; top:2.4%;  width:44.9%; height:27.0%; }
+html.is-wide-phone .trio-tap.t2{ left:22.2%; top:31.6%; width:62.8%; height:35.4%; }
+html.is-wide-phone .trio-tap.t3{ left:33.7%; top:69.3%; width:42.8%; height:27.1%; }
+
+/* A breath of paper before the rose that opens the notes. */
+html.is-wide-phone .note-page{ padding-top:calc(var(--sheet) * 0.035); background:var(--paper); }
+
+/* ==================================================================
+   The laptop view, drawn from her landscape pages
+   ------------------------------------------------------------------
+   Everything below is for a real wide screen only. The telephone is
+   drawn at the width of a laptop and shrunk, so it answers the same
+   width queries; `html:not(.is-wide-phone)` is what keeps the phone
+   out, and nothing here reaches it.
+   ================================================================== */
+@media (min-width:60em){
+
+  /* Our Wedding: her page entire -- the silk, the two taped photographs
+     and the lettering are all in her drawing now, so the photographs the
+     page used to lay over it are no longer needed. */
+  html:not(.is-wide-phone) .pg-details.cv-inset{ aspect-ratio:auto; }
+  html:not(.is-wide-phone) .pg-details.cv-inset .canva.cv-wed{
+    position:static; left:auto; top:auto; width:100%;
+  }
+  html:not(.is-wide-phone) .pg-details .ov-det{ display:none; }
+  /* the two pills are drawn on her page; these sit exactly over them and
+     carry the links, so the page shows her buttons and they work */
+  html:not(.is-wide-phone) .pg-details .ov-maps{ top:74.2%; height:4.85%; }
+  html:not(.is-wide-phone) .pg-details .ov-maps .mapbtn{
+    border:0; background:none; box-shadow:none; color:transparent;
+  }
+  html:not(.is-wide-phone) .pg-details .ov-maps .mapbtn:hover{
+    box-shadow:none; transform:none;
+  }
+  html:not(.is-wide-phone) .pg-details .ov-maps .mapbtn:first-child{
+    left:11.30%; width:9.85%;
+  }
+  html:not(.is-wide-phone) .pg-details .ov-maps .mapbtn:last-child{
+    left:31.50%; width:9.65%;
+  }
+
+  /* the silk that crosses the countdown */
+  html:not(.is-wide-phone) .ov-rib{
+    display:block; position:absolute; z-index:3; pointer-events:none;
+    height:auto;
+  }
+  html:not(.is-wide-phone) .ov-rib-pre{ left:-9.6%; top:4.2%; width:50.5%; }
+
+  /* her lettering sits a little down the page, clear of the bar that
+     follows the reader down the screen */
+  /* her lettering stands where she set it, to the right of the silk's
+     tail, and the counting a little higher up the blanket */
+  html:not(.is-wide-phone) .prelude-t{ left:32.66%; top:11.50%; width:55.40%; }
+  html:not(.is-wide-phone) .prelude .count{ top:75.5%; }
+
+  /* Our Love Story: the gold frame and its photograph are in her page */
+  html:not(.is-wide-phone) .pg-story .ov-story{ display:none; }
+  html:not(.is-wide-phone) .pg-story{ background:#FFFFFF; background-image:none; }
+
+  /* Our Entourage: the gold crown, the lilies, and the groom's side on
+     the left, all as she drew them */
+  html:not(.is-wide-phone) .pg-ent{ background:#FFFFFF; background-image:none; }
+
+  /* the gift page and the verse page: her drawings carry the photographs,
+     the lettering and the code, so the pieces laid over them come off */
+  html:not(.is-wide-phone) .pg-gift .ov-g1,
+  html:not(.is-wide-phone) .pg-gift .ov-g2,
+  html:not(.is-wide-phone) .pg-gift .ov-qr,
+  html:not(.is-wide-phone) .pg-verse .ov-verse,
+  html:not(.is-wide-phone) .pg-verse .ov-song{ display:none; }
+  html:not(.is-wide-phone) .pg-verse{ background:#FFFFFF; background-image:none; }
+
+  /* The three photographs: her page itself, silk and all, rather than
+     three pictures laid out to look like it. The taps that open each
+     photograph sit over them, unseen. */
+  html:not(.is-wide-phone) .pg-trio{
+    aspect-ratio:1600/933; padding:0;
+    background:#FFFFFF url(../img/lap-trio.jpg?v=1) center/100% 100% no-repeat;
+  }
+  html:not(.is-wide-phone) .pg-trio figure{ display:none; }
+  html:not(.is-wide-phone) .trio-taps{ display:block; position:absolute; inset:0; }
+  html:not(.is-wide-phone) .trio-tap{
+    position:absolute; border:0; padding:0; background:transparent; cursor:pointer;
+  }
+  html:not(.is-wide-phone) .trio-tap:focus-visible{ outline:2px solid #4a4232; outline-offset:2px; }
+  html:not(.is-wide-phone) .trio-tap.t1{ left:1.50%;  top:15.97%; width:29.12%; height:64.63%; }
+  html:not(.is-wide-phone) .trio-tap.t2{ left:36.19%; top:13.18%; width:27.25%; height:70.10%; }
+  html:not(.is-wide-phone) .trio-tap.t3{ left:65.94%; top:19.08%; width:28.25%; height:61.52%; }
+  html:not(.is-wide-phone) .ov-rib-trio{ display:none; }
+}
+
+/* The reply, on her black card
+   ------------------------------------------------------------------
+   She sets this page dark, with the daisy lace along its top, exactly
+   as the telephone already shows it. Only the laptop is changed here;
+   the telephone has its own rules further up and is left alone. */
+@media (min-width:60em){
+
+  html:not(.is-wide-phone) .seam-mark.on-rsvp{ display:none; }
+
+  html:not(.is-wide-phone) .pg-rsvp{
+    background:var(--night); background-image:none; color:#F2F1EC;
+    padding-top:8.4cqw;
+  }
+  html:not(.is-wide-phone) .pg-rsvp::before{
+    content:""; position:absolute; left:0; right:0; top:0; z-index:4;
+    height:5.0cqw; pointer-events:none;
+    background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  }
+  /* her reply heading is drawn in dark ink for a pale page; on the black
+     card it is turned about so it reads white */
+  html:not(.is-wide-phone) .scr-rsvp{ filter:invert(1); }
+  html:not(.is-wide-phone) .pg-rsvp .rsvp-lede,
+  html:not(.is-wide-phone) .pg-rsvp .field-label,
+  html:not(.is-wide-phone) .pg-rsvp .party-h,
+  html:not(.is-wide-phone) .pg-rsvp .seats{ color:#DEDDD6; }
+  html:not(.is-wide-phone) .pg-rsvp .seats-n,
+  html:not(.is-wide-phone) .pg-rsvp .guest-n{ color:#F2F1EC; }
+  html:not(.is-wide-phone) .pg-rsvp .hint{ color:#A9A8A1; }
+  html:not(.is-wide-phone) .pg-rsvp .cta{ background:#fff; color:#111; border-color:#fff; }
+  html:not(.is-wide-phone) .pg-rsvp .cta:hover{ background:#EDECE6; }
+  html:not(.is-wide-phone) .pg-rsvp .text-cta{ color:#CFCEC7; }
+  html:not(.is-wide-phone) .pg-rsvp :focus-visible{ outline-color:#fff; }
+}
+
+/* Her pages run one into the next
+   ------------------------------------------------------------------
+   In her film the pages meet without any rule, flower or band between
+   them. The only thing she sets between pages is the daisy lace, and
+   she hangs it from the top of three pages: the two photographs that
+   fill the page, and the one where guests send theirs. So on a laptop
+   every seam comes off and the lace is given back where she drew it.
+   The telephone keeps its own seams, which she has already approved. */
+@media (min-width:60em){
+
+  html:not(.is-wide-phone) .seam{ display:none; }
+
+  /* Two separators she keeps: the row of pearls before the love story and
+     before the couple's verse, where two pale pages meet and their
+     writing would otherwise run together. Everywhere else a band of lace
+     or a change of ground already parts the pages, and those she wants
+     to touch. */
+  html:not(.is-wide-phone) .seam-pearls{ display:grid; }
+
+  html:not(.is-wide-phone) #details,
+  html:not(.is-wide-phone) .pg-shot-lace,
+  html:not(.is-wide-phone) .pg-pv{ position:relative; container-type:inline-size; }
+
+  html:not(.is-wide-phone) #details::before,
+  html:not(.is-wide-phone) .pg-shot-lace::before,
+  html:not(.is-wide-phone) .pg-pv::before{
+    content:""; position:absolute; left:0; right:0; top:0; z-index:4;
+    height:5.0cqw; pointer-events:none;
+    background:url(../img/ph-lace.png?v=1) repeat-x left top/auto 100%;
+  }
+}
+
+/* The top of a page is not softened away
+   ------------------------------------------------------------------
+   Three pages were given a gentle fade along their top edge, which on
+   a laptop washes out the first band of the drawing -- her gold crown
+   above all. She wants the pages to meet, so the fade comes off and
+   each page begins at full strength where the one before it ends. */
+@media (min-width:60em){
+  html:not(.is-wide-phone) .pg-story,
+  html:not(.is-wide-phone) .pg-ent,
+  html:not(.is-wide-phone) .pg-verse{
+    -webkit-mask-image:none; mask-image:none;
+  }
+}
+
+/* The silk on the frequently-asked page, and the woods at the edges
+   ------------------------------------------------------------------
+   Her page is 16:9 and the silk runs off its left side; in her own file
+   that side is the edge of the screen, so it reads as leaving the frame.
+   A laptop lays her page inside a sheet with lace down each side, so the
+   same run-off ended on a hard upright line in mid-air. The last of it is
+   given to white instead, and the band drifts out rather than being cut.
+
+   The page also keeps a narrow strip at each side so the scrollbar's
+   arrival never shifts the writing. Against the woods those strips read
+   as a white frame, so while the envelope is sealed the strips are given
+   a still of the same woods. */
+@media (min-width:60em){
+}
+
+html.is-sealed{ background:#17210F; }
+
+/* The page keeps a narrow strip at each side so that the writing never
+   shifts when the scrollbar comes and goes. While the envelope is on the
+   screen those strips are given up, because the woods must reach the
+   glass and there is nothing to scroll behind them anyway; they are taken
+   back the moment the envelope leaves and the pages take over. */
+html.is-overture{ scrollbar-gutter:auto; }
+html.is-wide-phone #overture{ background-image:url(../img/forest-first.jpg); }
+
+/* The in-between width: a tablet held upright, or a window not opened full
+   ------------------------------------------------------------------
+   Narrower than a laptop but wider than a telephone, the page shows its own
+   writing rather than her drawings of the pages. Three of those pages are
+   white in her design and were coming up on the crumpled paper, so here
+   they are given her white ground too. */
+@media (max-width:59.99em){
+  html:not(.is-wide-phone) .pg-story,
+  html:not(.is-wide-phone) .pg-ent,
+  html:not(.is-wide-phone) .pg-verse{
+    background-color:#FFFFFF; background-image:none;
+    -webkit-mask-image:none; mask-image:none;
+  }
+}

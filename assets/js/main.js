@@ -1349,8 +1349,12 @@
 
   toggle.addEventListener('click', function(){
     if (score.paused){
-      land();
-      play(false);
+      /* The same careful start the song makes on its own: find the spot
+         first, and if the sound file has not said where it is yet, begin
+         without sound and come up once the needle is down. Asking to play
+         straight away was what started the song at its opening bar when the
+         button was pressed the moment the page appeared. */
+      goOn();
     } else {
       wanted = false;
       clearInterval(fadeTimer);
@@ -1369,8 +1373,7 @@
         setPlaying(false);
       }
     } else if (wanted && score.paused){
-      land();
-      play(false);
+      goOn();
     }
   });
 
@@ -1424,60 +1427,63 @@
     land();
   }
 
+  /* Started with no sound at all when the spot has not been found yet, so
+     that nothing of the opening is heard while it is being looked for; the
+     sound is brought up only once the needle has landed. When the needle is
+     already down, it simply carries on at the volume it had. */
+  var aim = null;
+  function goOn(){
+    land();
+
+    if (settled || !(spot > 0)){ play(false); return; }
+
+    play(true);
+
+    var tries = 0;
+    window.clearInterval(aim);
+    aim = window.setInterval(function(){
+      tries++;
+      land();
+      if (settled || tries >= 25){
+        window.clearInterval(aim);
+        aim = null;
+        if (!score.paused) fadeUp(450);
+      }
+    }, 120);
+  }
+
+  /* A telephone will not let a page it has only just opened make a sound
+     until it has been touched, and the touch that asked for the page does
+     not count once the page has changed. So the song waits, already at its
+     spot, for the very first thing anybody does here: a tap, a scroll, a
+     key. Watching is set up at once, so even a touch in the first moment is
+     not missed. */
+  var HEED = ['pointerdown', 'pointerup', 'touchstart', 'touchend',
+              'click', 'keydown', 'scroll', 'wheel'];
+  function heed(on){
+    HEED.forEach(function(ev){
+      if (on) document.addEventListener(ev, nudge, true);
+      else document.removeEventListener(ev, nudge, true);
+    });
+  }
+  /* A press on the music button is left to the button. Otherwise the press
+     was heard twice: once here, which started the song, and once by the
+     button, which found it playing and stopped it again. */
+  function nudge(e){
+    if (e && e.target && toggle.contains(e.target)) return;
+    if (!wanted || !score.paused){ heed(false); return; }
+    goOn();
+    window.setTimeout(function(){ if (!score.paused) heed(false); }, 160);
+  }
+  score.addEventListener('play', function(){ heed(false); });
+
   (function carryOn(){
     if (!carried) return;
     wanted = true;
 
-    /* Started with no sound at all, so that nothing of the opening is heard
-       while the spot is still being found; the sound is brought up only
-       once the needle has landed. */
-    var aim = null;
-    function goOn(){
-      land();
-
-      /* Already standing on the right spot, so it simply carries on at the
-         volume it had. Creeping back up from silence was heard as the song
-         stopping and then starting again, when all that had happened was a
-         new page opening. */
-      if (settled || !(spot > 0)){ play(false); return; }
-
-      play(true);
-
-      var tries = 0;
-      window.clearInterval(aim);
-      aim = window.setInterval(function(){
-        tries++;
-        land();
-        if (settled || tries >= 25){
-          window.clearInterval(aim);
-          aim = null;
-          if (!score.paused) fadeUp(450);
-        }
-      }, 120);
-    }
-
     if (score.readyState >= 1) goOn();
     else score.addEventListener('loadedmetadata', goOn, { once: true });
 
-    /* A telephone will not let a page it has only just opened make a sound
-       until it has been touched, and the touch that asked for the page does
-       not count once the page has changed. So the song waits, already at
-       its spot, for the very first thing anybody does here: a tap, a scroll,
-       a key. Watching is set up at once, and watched for in the catching
-       pass, so even a touch in the first moment is not missed. */
-    var HEED = ['pointerdown', 'pointerup', 'touchstart', 'touchend',
-                'click', 'keydown', 'scroll', 'wheel'];
-    function heed(on){
-      HEED.forEach(function(ev){
-        if (on) document.addEventListener(ev, nudge, true);
-        else document.removeEventListener(ev, nudge, true);
-      });
-    }
-    function nudge(){
-      if (!wanted || !score.paused){ heed(false); return; }
-      goOn();
-      window.setTimeout(function(){ if (!score.paused) heed(false); }, 160);
-    }
     if (score.paused) heed(true);
   })();
 
@@ -1545,6 +1551,51 @@
   /* How much of the letter's width is the written part, the lace down each
      side taken off. */
   var BARE = 0.72408;
+
+  /* The woods behind the envelope. The film is put into the page here
+     rather than written into it, so it is asked for once and at the shape
+     the screen actually needs: the tall cut for a telephone, the wide cut
+     for a laptop. A still of the first frame stands in until the film is
+     ready, so there is no blank moment. */
+  (function woods(){
+    if (!overture) return;
+    var tall = document.documentElement.classList.contains('is-wide-phone');
+    var cut  = tall ? { film: 'assets/video/forest-loop.mp4?v=1',
+                        still: 'assets/img/forest-first.jpg' }
+                    : { film: 'assets/video/forest-wide.mp4?v=1',
+                        still: 'assets/img/forest-wide-first.jpg' };
+
+    var film = document.createElement('video');
+    film.className = 'env-woods';
+    film.muted = true;
+    film.defaultMuted = true;
+    film.loop = true;
+    film.autoplay = true;
+    film.setAttribute('muted', '');
+    film.setAttribute('loop', '');
+    film.setAttribute('autoplay', '');
+    film.setAttribute('playsinline', '');
+    film.setAttribute('webkit-playsinline', '');
+    film.setAttribute('aria-hidden', 'true');
+    film.setAttribute('tabindex', '-1');
+    film.setAttribute('disablepictureinpicture', '');
+    film.setAttribute('poster', cut.still);
+    film.setAttribute('preload', 'auto');
+    film.src = cut.film;
+    overture.insertBefore(film, overture.firstChild);
+
+    /* Some telephones hold the film until the page has been touched, the
+       same bargain they drive over sound. The still is showing meanwhile,
+       so nothing is missing; the drift simply starts at the first touch. */
+    function roll(){
+      var go = film.play();
+      if (go && typeof go.then === 'function') go.catch(function(){});
+    }
+    roll();
+    ['pointerdown', 'touchend', 'click'].forEach(function(ev){
+      document.addEventListener(ev, roll, { once: true, passive: true, capture: true });
+    });
+  })();
 
   /* A browser paints a picture once, at the size it was laid out, and
      stretches that painting if it is later made bigger, which leaves the
@@ -1730,6 +1781,7 @@
         window.clearTimeout(lastOut);
         window.removeEventListener('scroll', dropEarly);
         if (overture.isConnected) overture.remove();
+        document.documentElement.classList.remove('is-overture');
         if (fly && fly.isConnected) fly.remove();
         suite.classList.remove('is-arriving');
         document.documentElement.classList.remove('is-arriving');
@@ -1766,6 +1818,7 @@
 
     opened = true;
     if (overture.isConnected) overture.remove();
+        document.documentElement.classList.remove('is-overture');
     lightSuite();
     var target = document.getElementById(wanted);
     if (target) window.setTimeout(function(){ target.scrollIntoView(); }, 60);
@@ -1811,6 +1864,7 @@
   if (document.documentElement.classList.contains('is-straight-in') ||
       /(^|[?&])open=1(&|$)/.test(location.search)){
     if (overture && overture.isConnected) overture.remove();
+        document.documentElement.classList.remove('is-overture');
     lightSuite();
     if (location.hash && location.hash.length > 1){
       var mark = document.getElementById(location.hash.slice(1));
@@ -2627,4 +2681,267 @@
 
     items.forEach(function(el){ io.observe(el); });
   }
+})();
+
+/* ------------------------------------------------------------------
+   Seeing a photograph properly.
+
+   The pictures on the page are small, and cropped to the shape of the
+   place they sit in. Tapping one opens it whole, on black, where it can
+   be pinched larger, dragged about and swiped through to the next.
+   ------------------------------------------------------------------ */
+(function viewer(){
+  var SHOTS = 16;
+  var open = false, at = 1;
+  var scale = 1, ox = 0, oy = 0;          // how far it is zoomed, and shifted
+  var shell, frame, rail, pane, pic, left, right, count, prev, next;
+  var pinch = null, drag = null, lastTap = 0, sliding = false, stirred = 0;
+  /* the frame takes the pointer for itself while a finger is down, so by
+     the time the tap is reported it looks as though it landed on the black.
+     Where the finger first went down is remembered instead. */
+  var onPic = false;
+  var GLIDE = 340;                        // how long a photograph takes to cross
+
+  function url(n){ return 'assets/photos/p' + (n < 10 ? '0' : '') + n + '.jpg'; }
+  function wrap(n){ return ((n - 1 + SHOTS) % SHOTS) + 1; }
+
+  function build(){
+    shell = document.createElement('div');
+    shell.className = 'look';
+    shell.setAttribute('role', 'dialog');
+    shell.setAttribute('aria-modal', 'true');
+    shell.setAttribute('aria-label', 'Photograph');
+    shell.innerHTML =
+      '<button class="look-x" type="button" aria-label="Close">&times;</button>' +
+      '<button class="look-go look-prev" type="button" aria-label="Previous photo">&#8249;</button>' +
+      '<button class="look-go look-next" type="button" aria-label="Next photo">&#8250;</button>' +
+      /* three of them side by side: the one before, the one being looked
+         at, and the one after. The rail they sit on follows the finger,
+         so the next photograph is already coming in while the thumb is
+         still moving, and nothing jumps. */
+      '<div class="look-frame"><div class="look-rail">' +
+        '<div class="look-pane"><img class="look-pic look-side" alt=""></div>' +
+        '<div class="look-pane"><img class="look-pic look-mid" alt=""></div>' +
+        '<div class="look-pane"><img class="look-pic look-side" alt=""></div>' +
+      '</div></div>' +
+      '<p class="look-n" aria-live="polite"></p>';
+    document.body.appendChild(shell);
+    frame = shell.querySelector('.look-frame');
+    rail  = shell.querySelector('.look-rail');
+    pane  = shell.querySelectorAll('.look-pane');
+    left  = pane[0].querySelector('img');
+    pic   = pane[1].querySelector('img');
+    right = pane[2].querySelector('img');
+    count = shell.querySelector('.look-n');
+    prev  = shell.querySelector('.look-prev');
+    next  = shell.querySelector('.look-next');
+
+    shell.querySelector('.look-x').addEventListener('click', shut);
+    prev.addEventListener('click', function(e){ e.stopPropagation(); step(-1); });
+    next.addEventListener('click', function(e){ e.stopPropagation(); step(1); });
+    /* a tap on the black around the photograph puts it away, but a swipe
+       that merely ends on the black is not a tap and must not */
+    shell.addEventListener('click', function(e){
+      if (stirred > 8 || sliding || onPic) return;
+      if (e.target === shell || e.target === frame ||
+          e.target === rail || e.target.classList.contains('look-pane')) shut();
+    });
+    window.addEventListener('resize', function(){ if (open && !sliding) lay(0, false); });
+
+    frame.addEventListener('pointerdown', down);
+    frame.addEventListener('pointermove', move);
+    frame.addEventListener('pointerup', up);
+    frame.addEventListener('pointercancel', up);
+    frame.addEventListener('wheel', function(e){
+      e.preventDefault();
+      zoomAt(e.clientX, e.clientY, scale * (e.deltaY < 0 ? 1.18 : 1 / 1.18));
+    }, { passive: false });
+  }
+
+  function place(){
+    pic.style.transform = 'translate(' + ox + 'px,' + oy + 'px) scale(' + scale + ')';
+    shell.classList.toggle('is-near', scale > 1.02);
+  }
+
+  function reset(){ scale = 1; ox = 0; oy = 0; place(); }
+
+  /* where the rail stands: at rest the middle pane fills the frame, and
+     dx is how far the finger has carried it from there */
+  function lay(dx, ease){
+    rail.style.transition = ease
+      ? 'transform ' + GLIDE + 'ms cubic-bezier(.22,.61,.36,1)' : 'none';
+    rail.style.transform = 'translate3d(' + (dx - frame.clientWidth) + 'px,0,0)';
+  }
+
+  function hang(){
+    left.src  = url(wrap(at - 1));
+    pic.src   = url(at);
+    right.src = url(wrap(at + 1));
+  }
+
+  function show(n){
+    at = wrap(n);
+    hang();
+    count.textContent = at + ' / ' + SHOTS;
+    reset();
+    lay(0, false);
+  }
+
+  /* d of -1 or 1 carries the next photograph in; 0 lets the one being
+     held fall back into place */
+  function step(d){
+    if (sliding || !open) return;
+    if (!d){ lay(0, true); return; }
+    sliding = true;
+    scale = 1; ox = 0; oy = 0; place();
+    lay(-d * frame.clientWidth, true);
+    window.setTimeout(function(){
+      at = wrap(at + d);
+      count.textContent = at + ' / ' + SHOTS;
+      // the rail is set back and the three pictures renamed in the one
+      // breath, so the eye never catches the change
+      lay(0, false);
+      hang();
+      sliding = false;
+    }, GLIDE);
+  }
+
+  var camefrom = null;
+  function go(n, from){
+    if (!shell) build();
+    camefrom = from || null;
+    open = true;
+    document.body.classList.add('is-looking');
+    shell.classList.add('is-on');
+    show(n);
+    shell.querySelector('.look-x').focus();
+  }
+
+  function shut(){
+    if (!open) return;
+    open = false;
+    shell.classList.remove('is-on');
+    document.body.classList.remove('is-looking');
+    reset();
+    if (camefrom && camefrom.focus) camefrom.focus();
+  }
+
+  function clamp(){
+    var r = frame.getBoundingClientRect();
+    var w = pic.clientWidth * scale, h = pic.clientHeight * scale;
+    var mx = Math.max(0, (w - r.width) / 2), my = Math.max(0, (h - r.height) / 2);
+    ox = Math.min(mx, Math.max(-mx, ox));
+    oy = Math.min(my, Math.max(-my, oy));
+  }
+
+  function zoomAt(cx, cy, to){
+    var was = scale;
+    scale = Math.min(5, Math.max(1, to));
+    var r = frame.getBoundingClientRect();
+    var px = cx - r.left - r.width / 2, py = cy - r.top - r.height / 2;
+    ox = px - (px - ox) * (scale / was);
+    oy = py - (py - oy) * (scale / was);
+    if (scale <= 1.001) { ox = 0; oy = 0; }
+    clamp(); place();
+  }
+
+  var touches = {};
+  function down(e){
+    onPic = e.target.tagName === 'IMG';
+    try { frame.setPointerCapture(e.pointerId); } catch (err) {}
+    touches[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var ids = Object.keys(touches);
+    if (ids.length === 2) {
+      var a = touches[ids[0]], b = touches[ids[1]];
+      pinch = { d: Math.hypot(a.x - b.x, a.y - b.y), s: scale,
+                cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2 };
+      drag = null;
+    } else {
+      drag = { x: e.clientX, y: e.clientY, ox: ox, oy: oy, moved: 0,
+               way: null, t: Date.now() };
+      if (scale <= 1.02 && !sliding) rail.style.transition = 'none';
+    }
+  }
+
+  function move(e){
+    if (!touches[e.pointerId]) return;
+    touches[e.pointerId] = { x: e.clientX, y: e.clientY };
+    var ids = Object.keys(touches);
+    if (pinch && ids.length === 2) {
+      var a = touches[ids[0]], b = touches[ids[1]];
+      var d = Math.hypot(a.x - b.x, a.y - b.y);
+      zoomAt(pinch.cx, pinch.cy, pinch.s * (d / pinch.d));
+      return;
+    }
+    if (drag) {
+      var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      drag.moved = Math.max(drag.moved, Math.hypot(dx, dy));
+      if (scale > 1.02) { ox = drag.ox + dx; oy = drag.oy + dy; clamp(); place(); }
+      else if (!sliding) {
+        // once the hand has clearly set off sideways, the rail is its own
+        // and goes on following it even if the finger wanders up or down
+        if (!drag.way && drag.moved > 10)
+          drag.way = Math.abs(dx) > Math.abs(dy) ? 'side' : 'down';
+        if (drag.way === 'side'){
+          drag.lx = dx; drag.lt = Date.now();
+          lay(dx, false);
+        }
+      }
+    }
+  }
+
+  function up(e){
+    delete touches[e.pointerId];
+    if (Object.keys(touches).length < 2) pinch = null;
+    if (!drag) return;
+    var dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    var quick = Date.now() - drag.t < 400;
+    stirred = drag.moved;
+
+    if (scale <= 1.02 && drag.way === 'side') {
+      // a short flick counts as much as a long pull: the photograph goes
+      // over if the hand was quick, or if it was carried a third of the way
+      var far = Math.abs(dx) > frame.clientWidth * 0.3;
+      var flick = quick && Math.abs(dx) > 40;
+      step((far || flick) ? (dx < 0 ? 1 : -1) : 0);
+    } else if (drag.moved < 8) {
+      var now = Date.now();
+      if (now - lastTap < 300) {               // two taps: closer, or back
+        if (scale > 1.02) reset();
+        else zoomAt(e.clientX, e.clientY, 2.6);
+        lastTap = 0;
+      } else {
+        lastTap = now;
+      }
+    }
+    drag = null;
+  }
+
+  document.addEventListener('keydown', function(e){
+    if (!open) return;
+    if (e.key === 'Escape') shut();
+    else if (e.key === 'ArrowRight') step(1);
+    else if (e.key === 'ArrowLeft') step(-1);
+  });
+
+  document.addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('[data-shot]') : null;
+    if (!el) return;
+    var n = parseInt(el.getAttribute('data-shot'), 10);
+    if (!n) return;
+    e.preventDefault();
+    go(n, el);
+  });
+
+  // the pictures that can be opened say so to a hand and to a reader
+  document.querySelectorAll('[data-shot]').forEach(function(el){
+    el.classList.add('can-look');
+    if (el.tagName === 'IMG') {
+      el.setAttribute('role', 'button');
+      el.setAttribute('tabindex', '0');
+      el.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+      });
+    }
+  });
 })();

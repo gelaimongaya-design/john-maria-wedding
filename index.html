@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="is-sealed">
+<html lang="en" class="is-sealed is-overture">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" id="port" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -8,13 +8,45 @@
   /* A telephone, not merely a small screen. A laptop set to show everything
      larger reports a short screen and was being taken for one, which laid
      the whole site out as it is laid out on a telephone. A finger is what
-     tells them apart. */
-  var small  = Math.min(screen.width || 9999, screen.height || 9999) < 820;
-  var finger = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-  if (small && finger) {
+     tells them apart.
+
+     A tablet held upright is given the telephone's pages too: it is a tall
+     screen in a pair of hands, which is what those pages were drawn for.
+     Laid on its side a tablet is wide enough for the laptop's pages, so
+     there it keeps them. */
+  var shortSide = Math.min(screen.width || 9999, screen.height || 9999);
+  /* Some tablets ask for the desktop kind of page and then answer that they
+     have no finger, so the count of fingers they can take is asked for too. */
+  var finger = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
+            || (navigator.maxTouchPoints || 0) > 1;
+
+  function decide(){
+    var upright = window.innerWidth < window.innerHeight;
+    return finger && (shortSide < 820 || (shortSide < 1100 && upright));
+  }
+
+  function apply(){
+    var h = document.documentElement;
+    var want = decide();
+    var has = / is-wide-phone\b/.test(' ' + h.className);
+    if (want === has) return;
     var tag = document.getElementById('port');
-    if (tag) tag.setAttribute('content', 'width=980, viewport-fit=cover');
-    document.documentElement.className += ' is-wide-phone';
+    if (want){
+      if (tag) tag.setAttribute('content', 'width=980, viewport-fit=cover');
+      h.className = (h.className + ' is-wide-phone').trim();
+    } else {
+      if (tag) tag.setAttribute('content', 'width=device-width, initial-scale=1, viewport-fit=cover');
+      h.className = h.className.replace(/\bis-wide-phone\b/, '').replace(/\s+/g, ' ').trim();
+    }
+  }
+  apply();
+
+  /* A tablet turned on its side wants the laptop's pages, and turned back
+     upright it wants the telephone's. A telephone wants the telephone's
+     either way, so it is never asked twice. */
+  if (finger && shortSide >= 820){
+    window.addEventListener('orientationchange', function(){ setTimeout(apply, 60); });
+    window.addEventListener('resize', function(){ setTimeout(apply, 60); }, { passive: true });
   }
 })();
 </script>
@@ -42,7 +74,7 @@
 
 <link rel="preload" href="assets/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/reset.css?v=25">
-<link rel="stylesheet" href="assets/css/style.css?v=106">
+<link rel="stylesheet" href="assets/css/style.css?v=173">
 <script>
 (function(){
   var asked = /(^|[?&])open=1(&|$)/.test(location.search);
@@ -56,7 +88,8 @@
   }
   if (!asked) return;
   var h = document.documentElement;
-  h.className = (h.className.replace(/\bis-sealed\b/, '') + ' is-straight-in').trim();
+  h.className = (h.className.replace(/\bis-sealed\b/, '').replace(/\bis-overture\b/, '')
+                 + ' is-straight-in').trim();
 })();
 </script>
 </head>
@@ -69,6 +102,8 @@
   <div class="env-stage">
 
     <div class="envelope">
+
+      <div class="env-paper" aria-hidden="true"></div>
 
       <div class="card-slot" aria-hidden="true">
         <div class="env-card">
@@ -83,22 +118,45 @@
         </div>
       </div>
 
-      <img class="env-wide" src="assets/img/env-wide.jpg?v=2" alt="" width="1912" height="1604">
-      <img class="env-pocket" src="assets/img/env-wide.jpg?v=2" alt="" width="1912" height="1604">
+      <picture>
+        <source srcset="assets/img/env-open.webp?v=3" type="image/webp">
+        <img class="env-wide" src="assets/img/env-open.png?v=3" alt="" width="1323" height="1651">
+      </picture>
+      <picture>
+        <source srcset="assets/img/env-open.webp?v=3" type="image/webp">
+        <img class="env-pocket" src="assets/img/env-open.png?v=3" alt="" width="1323" height="1651">
+      </picture>
+      <picture>
+        <source srcset="assets/img/env-bloom-b.webp?v=2" type="image/webp">
+        <img class="env-bloom env-bloom-b" src="assets/img/env-bloom-b.png?v=2" alt=""
+             width="949" height="1009">
+      </picture>
+      <picture>
+        <source srcset="assets/img/env-bloom-a.webp?v=2" type="image/webp">
+        <img class="env-bloom env-bloom-a" src="assets/img/env-bloom-a.png?v=2" alt=""
+             width="966" height="826">
+      </picture>
+      <picture>
+        <source srcset="assets/img/env-rose.webp?v=1" type="image/webp">
+        <img class="env-rose" src="assets/img/env-rose.png?v=1" alt=""
+             width="893" height="899">
+      </picture>
+      <picture>
+        <source srcset="assets/img/env-lily.webp?v=1" type="image/webp">
+        <img class="env-lily" src="assets/img/env-lily.png?v=1" alt=""
+             width="2313" height="2875">
+      </picture>
       <div class="env-front">
         <div class="env-flap" aria-hidden="true">
           <div class="env-leaf">
-            <img class="flap-face" src="assets/img/flap-face.png" alt=""
+            <img class="flap-face" src="assets/img/flap-face.png?v=21" alt=""
                  width="1551" height="910">
             <img class="flap-back" src="assets/img/flap-back.png" alt=""
                  width="1551" height="910">
           </div>
         </div>
         <span class="env-sheet">
-          <img class="env-body" src="assets/img/env-body.png"
-               alt="A love letter from John and Maria" width="1551" height="910">
-          <img class="env-cut" src="assets/img/env-cut.png" alt=""
-               width="1551" height="910">
+
           <img class="env-cue" src="assets/img/env-cue.png" alt=""
                width="688" height="64" aria-hidden="true">
           <img class="env-caps" src="assets/img/env-caps.png" alt=""
@@ -161,17 +219,25 @@
 <div class="leaf">
 
   <section class="pg pg-land" id="home">
-    <img class="land-shot" src="assets/img/land-photo.jpg"
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-land.webp?v=1" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-land.jpg?v=1">
+      <img class="land-shot" data-shot="10" src="assets/img/land-photo.jpg"
          alt="John Rolly and Ma. Rhea in the hills of Antipolo" width="2000" height="1333">
-    <img class="land-scr" src="assets/img/scr-knot.png"
+    </picture>
+    <img class="land-scr" src="assets/img/scr-knot.svg"
          alt="John Rolly and Ma. Rhea are tying the knot!" width="1952" height="512">
     <p class="land-when">February 2, 2027</p>
     <p class="land-where">Antipolo City, Rizal</p>
   </section>
 
   <section class="pg is-plain pg-letter has-canva cv-inset">
-    <img class="canva cv-letter" src="assets/img/pg-letter.jpg" alt=""
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-letter.webp?v=2" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-letter.jpg?v=2">
+      <img class="canva cv-letter" src="assets/img/pg-letter.jpg" alt=""
          width="1472" height="773" aria-hidden="true">
+    </picture>
     <div class="live">
     <div class="letter-in">
       <div class="letter-note js-reveal">
@@ -200,12 +266,17 @@
   <div class="seam seam-arch" aria-hidden="true"></div>
 
   <section class="pg pg-shot" id="details">
-    <img decoding="async" src="assets/img/pic-trio.jpg" alt="John and Maria on the mountain road" width="2000" height="1116">
+    <img decoding="async" data-shot="6" src="assets/img/pic-trio.jpg" alt="John and Maria on the mountain road" width="2000" height="1116">
   </section>
 
   <section class="pg is-plain pg-details has-canva cv-inset">
-    <img decoding="async" class="canva cv-wed" src="assets/img/pg-wed.jpg" alt=""
-         width="608" height="464" aria-hidden="true">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-wed.webp?v=3" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-wed.jpg?v=3">
+      <source srcset="assets/img/lap-wed.webp?v=1" type="image/webp">
+      <img decoding="async" class="canva cv-wed" src="assets/img/lap-wed.jpg?v=1" alt=""
+         width="1600" height="943" aria-hidden="true">
+    </picture>
     <div class="live">
     <div class="det-in">
       <div class="det-text js-reveal">
@@ -261,10 +332,12 @@
 
   <section class="pg is-plain pg-day" id="ourday">
     <div class="prelude">
-      <img decoding="async" class="prelude-shot" src="assets/img/prelude.jpg" alt=""
+      <img decoding="async" class="prelude-shot" data-shot="16" src="assets/img/prelude.jpg" alt=""
            width="2000" height="1127" aria-hidden="true">
+      <img decoding="async" class="ov-rib ov-rib-pre" src="assets/img/lap-rib-pre.png?v=1"
+           alt="" width="1537" height="643" aria-hidden="true">
       <div class="prelude-in">
-        <img decoding="async" class="prelude-t" src="assets/img/scr-prelude.png" alt="our prelude to forever&hellip;" width="1818" height="306">
+        <img decoding="async" class="prelude-t" src="assets/img/scr-prelude.svg" alt="our prelude to forever&hellip;" width="1818" height="306">
         <div class="count" aria-label="Countdown to the wedding">
           <div class="count-row">
             <div class="count-unit"><span class="count-l">Days</span><span class="flip" id="c-d" data-pad="3"></span></div>
@@ -280,8 +353,12 @@
     </div>
 
     <div class="note-page has-canva">
-    <img decoding="async" class="canva" src="assets/img/pg-note.jpg" alt=""
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-note.webp?v=2" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-note.jpg?v=2">
+      <img decoding="async" class="canva" src="assets/img/pg-note.jpg" alt=""
          width="1366" height="768" aria-hidden="true">
+    </picture>
     <div class="live">
     <div class="note-three">
       <div class="note-col js-reveal">
@@ -319,8 +396,13 @@
   <div class="seam seam-mark seam-pearls" aria-hidden="true"></div>
 
   <section class="pg pg-story has-canva" id="story">
-    <img decoding="async" class="canva" src="assets/img/pg-story.jpg" alt=""
-         width="1392" height="838" aria-hidden="true">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-story.webp?v=2" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-story.jpg?v=2">
+      <source srcset="assets/img/lap-story.webp?v=1" type="image/webp">
+      <img decoding="async" class="canva" src="assets/img/lap-story.jpg?v=1" alt=""
+         width="1600" height="1518" aria-hidden="true">
+    </picture>
     <div class="live">
     <div class="sto-in">
       <div class="sto-left js-reveal">
@@ -367,16 +449,23 @@
     </figure>
   </section>
 
-  <section class="pg pg-shot">
-    <img decoding="async" src="assets/img/pic-hill.jpg" alt="John and Maria on the hillside" width="1366" height="768">
+  <div class="seam seam-aft-story" aria-hidden="true"></div>
+
+  <section class="pg pg-shot pg-shot-lace">
+    <img decoding="async" data-shot="3" src="assets/img/pic-hill.jpg" alt="John and Maria on the hillside" width="1366" height="768">
   </section>
 
   <div class="seam seam-mark seam-gypso" aria-hidden="true"></div>
 
   <section class="pg pg-trio">
-    <figure class="trio-a"><img decoding="async" src="assets/img/trio-a.jpg" alt="John holding Maria in the long grass" width="900" height="1350"></figure>
-    <figure class="trio-b"><img decoding="async" src="assets/img/trio-b.jpg" alt="Their hands, hers over his" width="1000" height="1455"></figure>
-    <figure class="trio-c"><img decoding="async" src="assets/img/trio-c.jpg" alt="John and Maria in the long grass" width="900" height="1350"></figure>
+        <div class="trio-taps" aria-hidden="false">
+      <button class="trio-tap t1" type="button" data-shot="15" aria-label="See this photo larger"></button>
+      <button class="trio-tap t2" type="button" data-shot="13" aria-label="See this photo larger"></button>
+      <button class="trio-tap t3" type="button" data-shot="5" aria-label="See this photo larger"></button>
+    </div>
+    <figure class="trio-a"><img decoding="async" data-shot="15" src="assets/img/trio-a.jpg" alt="John holding Maria in the long grass" width="900" height="1350"></figure>
+    <figure class="trio-b"><img decoding="async" data-shot="13" src="assets/img/trio-b.jpg" alt="Their hands, hers over his" width="1000" height="1455"></figure>
+    <figure class="trio-c"><img decoding="async" data-shot="5" src="assets/img/trio-c.jpg" alt="John and Maria in the long grass" width="900" height="1350"></figure>
   </section>
 
   <section class="pg pg-time" id="timeline">
@@ -388,13 +477,13 @@
           <div class="time-row"><span>3:00 PM</span><span>Ceremony</span></div>
           <div class="time-row"><span>4:00 PM</span><span>Golden Hour</span></div>
           <div class="time-row"><span>5:00 PM</span><span>Reception</span></div>
-          <div class="time-row"><span>8:00 PM</span><span>End of Event</span></div>
+          <div class="time-row"><span>8:00 PM</span><span>Farewell</span></div>
         </div>
       </div>
 
       <figure class="taped taped-d js-reveal">
         <img decoding="async" class="tape" src="assets/img/tape-l.png" alt="" width="924" height="406">
-        <img decoding="async" src="assets/img/tl-venue.jpg" alt="The reception tables set under the trees at Timmy in the Woods" width="900" height="1090">
+        <img decoding="async" data-shot="2" src="assets/img/tl-venue.jpg" alt="The reception tables set under the trees at Timmy in the Woods" width="900" height="1090">
       </figure>
     </div>
   </section>
@@ -402,8 +491,13 @@
   <div class="seam seam-mark seam-euca" aria-hidden="true"></div>
 
   <section class="pg pg-ent has-canva" id="entourage">
-    <img decoding="async" class="canva" src="assets/img/pg-ent.jpg" alt=""
-         width="1392" height="1606" aria-hidden="true">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-ent.webp?v=4" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-ent.jpg?v=4">
+      <source srcset="assets/img/lap-ent.webp?v=2" type="image/webp">
+      <img decoding="async" class="canva" src="assets/img/lap-ent.jpg?v=2" alt=""
+         width="1600" height="1794" aria-hidden="true">
+    </picture>
     <div class="live">
     <img decoding="async" class="ent-lily ent-lily-l" src="assets/img/ent-lily-l.png" alt="" width="349" height="813" aria-hidden="true">
     <img decoding="async" class="ent-lily ent-lily-r" src="assets/img/ent-lily-r.png" alt="" width="503" height="726" aria-hidden="true">
@@ -418,12 +512,12 @@
 
       <div class="role-two">
         <div class="role">
-          <h3 class="r-t">Parents of the Bride</h3>
-          <p>Mr. Francisco Gabas Jr.<br>Mrs. Leonisa Gabas</p>
-        </div>
-        <div class="role">
           <h3 class="r-t">Parents of the Groom</h3>
           <p>Mr. Rolly Gumbi<br>Mrs. Levie Gumbi</p>
+        </div>
+        <div class="role">
+          <h3 class="r-t">Parents of the Bride</h3>
+          <p>Mr. Francisco Gabas Jr.<br>Mrs. Leonisa Gabas</p>
         </div>
       </div>
 
@@ -515,6 +609,9 @@
         <p class="pv-link">
           <a id="photo-link" class="cta" href="photos.html">Upload here</a>
         </p>
+
+        <p class="pv-ask">Kindly let the couple post first on social media.</p>
+        <p class="pv-lede">You are welcome to share yours once we do. Thank you!</p>
       </div>
 
     </div>
@@ -523,8 +620,13 @@
   <div class="seam seam-mark seam-daisy" aria-hidden="true"></div>
 
   <section class="pg is-plain pg-gift has-canva" id="gift">
-    <img decoding="async" class="canva" src="assets/img/pg-gift.jpg" alt=""
-         width="1366" height="768" aria-hidden="true">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-gift.webp?v=2" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-gift.jpg?v=2">
+      <source srcset="assets/img/lap-gift.webp?v=1" type="image/webp">
+      <img decoding="async" class="canva" src="assets/img/lap-gift.jpg?v=1" alt=""
+         width="1600" height="900" aria-hidden="true">
+    </picture>
     <div class="live">
     <img decoding="async" class="scr scr-gift js-reveal" src="assets/img/scr-presence.png"
          alt="Your presence and prayer are that we request." width="870" height="242">
@@ -561,11 +663,16 @@
     </figure>
   </section>
 
-  <div class="seam seam-mark seam-pearls" aria-hidden="true"></div>
+  <div class="seam seam-mark seam-pearls on-verse" aria-hidden="true"></div>
 
   <section class="pg pg-verse has-canva">
-    <img decoding="async" class="canva" src="assets/img/pg-song.jpg" alt=""
-         width="1366" height="888" aria-hidden="true">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-song.webp?v=3" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-song.jpg?v=3">
+      <source srcset="assets/img/lap-verse.webp?v=1" type="image/webp">
+      <img decoding="async" class="canva" src="assets/img/lap-verse.jpg?v=1" alt=""
+         width="1600" height="900" aria-hidden="true">
+    </picture>
     <div class="live">
     <div class="verse js-reveal">
       <img decoding="async" class="verse-word" src="assets/img/scr-song.png" alt="Song" width="576" height="314">
@@ -588,8 +695,13 @@
   </section>
 
   <section class="pg is-plain pg-faq has-canva cv-inset" id="faq">
-    <img decoding="async" class="canva cv-faq" src="assets/img/pg-faq.jpg" alt=""
-         width="1900" height="1158" aria-hidden="true">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-faq.webp?v=2" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-faq.jpg?v=2">
+      <source srcset="assets/img/lap-faq.webp?v=1" type="image/webp">
+      <img decoding="async" class="canva cv-faq" src="assets/img/lap-faq.jpg?v=1" alt=""
+         width="1600" height="900" aria-hidden="true">
+    </picture>
     <div class="live">
     <div class="faq-wrap">
       <img decoding="async" class="faq-art" src="assets/img/fl-gypso.png" alt="" width="484" height="780" aria-hidden="true">
@@ -638,13 +750,15 @@
     </div>
   </section>
 
-  <div class="seam seam-mark seam-rose" aria-hidden="true"></div>
+  <div class="seam seam-ribbon" aria-hidden="true"></div>
+
+  <div class="seam seam-mark seam-rose on-rsvp" aria-hidden="true"></div>
 
   <section class="pg is-plain pg-rsvp" id="rsvp">
     <img decoding="async" class="scr scr-rsvp js-reveal" src="assets/img/scr-rsvp.png" alt="RSVP" width="416" height="130">
 
     <p class="rsvp-lede js-reveal">We have reserved seat/s for you. The favour of your reply is
-       requested on or before <b>November 30, 2026</b>.</p>
+       requested on or before <b>December 15, 2026</b>.</p>
 
     <form class="rsvp-find" id="rsvp-find" hidden>
       <div class="row">
@@ -690,21 +804,25 @@
   </section>
 
   <section class="pg pg-end">
-    <img decoding="async" class="end-shot" src="assets/img/end-photo.jpg" alt="" width="2000" height="784">
+    <picture>
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-end.webp?v=1" type="image/webp">
+      <source media="(pointer: coarse) and (max-width: 1000px)" srcset="assets/img/ph-end.jpg?v=1">
+      <img decoding="async" class="end-shot" data-shot="8" src="assets/img/end-photo.jpg" alt="" width="2000" height="784">
+    </picture>
 
     <div class="end-bar">
       <img decoding="async" class="end-t" src="assets/img/scr-getintouch.png" alt="Get in touch" width="880" height="461">
 
       <div class="end-who">
         <p class="end-n">John Rolly Gumbi</p>
-        <p class="end-c"><span class="ic">&#9742;</span> <a href="tel:+639163131012">0916-313-1012</a></p>
-        <p class="end-c"><span class="ic">&#9993;</span> <a href="mailto:johnandmaria@gmail.com">johnandmaria@gmail.com</a></p>
+        <p class="end-c"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.2 2.2z"/></svg></span> <a href="tel:+639163131012">0916-313-1012</a></p>
+        <p class="end-c"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.2 5.6h17.6c.55 0 1 .45 1 1v10.8c0 .55-.45 1-1 1H3.2c-.55 0-1-.45-1-1V6.6c0-.55.45-1 1-1z" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M2.8 7.1 12 13.4l9.2-6.3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <a href="mailto:johnandmaria@gmail.com">johnandmaria@gmail.com</a></p>
       </div>
 
       <div class="end-who">
         <p class="end-n">Ma. Rhea Gabas</p>
-        <p class="end-c"><span class="ic">&#9742;</span> <a href="tel:+639167408346">0916-740-8346</a></p>
-        <p class="end-c"><span class="ic">&#9993;</span> <a href="mailto:johnandmaria@gmail.com">johnandmaria@gmail.com</a></p>
+        <p class="end-c"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.2 2.2z"/></svg></span> <a href="tel:+639167408346">0916-740-8346</a></p>
+        <p class="end-c"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3.2 5.6h17.6c.55 0 1 .45 1 1v10.8c0 .55-.45 1-1 1H3.2c-.55 0-1-.45-1-1V6.6c0-.55.45-1 1-1z" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M2.8 7.1 12 13.4l9.2-6.3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span> <a href="mailto:johnandmaria@gmail.com">johnandmaria@gmail.com</a></p>
       </div>
 
       <svg class="mark-jm end-mark" role="img" aria-label="John + Maria"><use href="#jm" xlink:href="#jm"></use></svg>
@@ -727,6 +845,6 @@
   </svg>
 </button>
 
-<script src="assets/js/main.js?v=75"></script>
+<script src="assets/js/main.js?v=84"></script>
 </body>
 </html>
